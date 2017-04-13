@@ -1,5 +1,4 @@
 Prerequisites:
-* resources referenced at the end of this post (mit app project file - .aia, ready application file- .apk, arduino sketch file - .ino)
 * Arduino Pro Micro 5V 16Mhz [size=xx-small](8Mhz version would get damaged without additional plugin. Take a look at product description for "Supported under Arduino IDE v1.0.2" which means that the device may not work without reflashing. Pick those with v1.05 support instead. I personally recommend [url=http://www.ebay.co.uk/usr/scooterboy101][b][color=#3333ff]this[/color][/b][/url] seller, gives outstanding support and has good knowledge about these devices.)[/size]
 * bluetooth module HC-06
 * 2K Ohm resistor
