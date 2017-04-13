@@ -1,2 +1,2 @@
 # supremeDuck
-"Rubber ducky" with bluetooth and android support
+"Rubber ducky" with android support using bluetooth
