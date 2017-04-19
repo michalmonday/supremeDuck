@@ -18,7 +18,8 @@ Plug it in to your friend's PC and by pressing a button on your android smartpho
 
 
 [Youtube video - current functionality presentation](https://www.youtube.com/watch?v=iL2pS2EvqkY&index=3&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)  
-[Youtube video - dynamic language encoding](https://www.youtube.com/watch?v=4nbv-LyDWvk&index=2&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)
+[Youtube video - dynamic language encoding](https://www.youtube.com/watch?v=4nbv-LyDWvk&index=2&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)  
+[Youtube video - early version](https://www.youtube.com/watch?v=mwDT1gX9wzU&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2&index=1)  
 
 
 
