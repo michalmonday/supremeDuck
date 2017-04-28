@@ -18,7 +18,6 @@ Plug it in to your friend's PC and by pressing a button on your android smartpho
 
 
 [Youtube video - current functionality presentation](https://www.youtube.com/watch?v=iL2pS2EvqkY&index=3&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)  
-[Youtube video - dynamic language encoding](https://www.youtube.com/watch?v=4nbv-LyDWvk&index=2&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)  
 [Youtube video - early version](https://www.youtube.com/watch?v=mwDT1gX9wzU&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2&index=1)  
 
 
@@ -28,8 +27,5 @@ Idk, it's based on arduino, after connecting it to the PC it's recognised as "US
 > Will the MalDuino work on computer X?
 > The MalDuino works just like an arduino leonardo, so if a leonoardo can do it on a certain computer, so can a MalDuino. It should be noted that I have had some reports of people having difficulty running scripts on windows 7, however this is not widespread as far as I know and I am looking into this.
 
-
-**Can the device perform the same functions on any keyboard encoding?**  
-Probably not but I didn't test them all, the encoding has been adapted from the orginal HAK5's "rubber ducky" which isn't perfect but it's more than enough to have fun with it.
 
 ![](http://i.imgur.com/LV6Ix5R.jpg)
