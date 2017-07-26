@@ -32,6 +32,7 @@ Keyboard simulating devices work differently depending on the system language se
   2. It takes advantage of the fact that Windows allows a tricky method of typing characters (by using ALT + NUMPAD keys it is possible to type the ASCII code and the desired character will be typed). As a result the device can be set to work with all of the most frequently used language settings without the need to change anything (as long as it's used on Windows). In the options of the android app it's possible to dynamically enable and disable it (it's called "MultiLang - Windows only" in the categories list).
 
 
+**Tutorial and usage info are available in [wiki section](https://github.com/michalmonday/supremeDuck/wiki)**  
 
 
 ![](http://i.imgur.com/LV6Ix5R.jpg)
