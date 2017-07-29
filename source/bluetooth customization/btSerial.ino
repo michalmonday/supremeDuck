@@ -10,6 +10,8 @@
  *  To actually input these commands the code below has to be flashed, then the "Serial Monitor" has to be opened 
  *  (at the right bottom corner of the serial monitor pick "No line ending" and "9600 baud")
  *  Then input the initial testing command "AT", it should reply with "OK" which is always kind of satisfying to see :P
+ *  
+ *  Note that for example on NEXUS 5 you have to pair/forget the device after changing its name for the changes to become visible. (that's just my observation)
  */
 
 #include <SoftwareSerial.h>
