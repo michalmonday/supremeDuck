@@ -32,8 +32,8 @@ trick = plug it in + plug out within 3 secs = special function is triggered(that
 //https://www.arduino.cc/en/Reference/KeyboardModifiers
 
 //SoftwareSerial BTSerial(16, 15);
-//SoftwareSerial BTSerial(9, 8); // RX | TX these are pins responsible for communication between the bluetooth module and arduino
-SoftwareSerial BTSerial(8, 9); //old pinout (less comfortable to solder, now only 1 of these devices has it this way)
+SoftwareSerial BTSerial(9, 8); // RX | TX these are pins responsible for communication between the bluetooth module and arduino
+//SoftwareSerial BTSerial(8, 9); //old pinout (less comfortable to solder, now only 1 of these devices has it this way)
 
 #define MAX_SERIAL_LENGTH 200 //if you'd like to make it greater than 255 make sure to replace "byte" with "int" inside every "for loop"
 char inSerial[MAX_SERIAL_LENGTH]; //it will contain the text sent from bluetooth module and received in arduino
