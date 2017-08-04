@@ -32,8 +32,8 @@ trick = plug it in + plug out within 3 secs = special function is triggered(that
 //https://www.arduino.cc/en/Reference/KeyboardModifiers
 
 //SoftwareSerial BTSerial(16, 15);
-SoftwareSerial BTSerial(9, 8); // RX | TX these are pins responsible for communication between the bluetooth module and arduino
-//SoftwareSerial BTSerial(8, 9); //old pinout (less comfortable to solder, now only 1 of these devices has it this way)
+//SoftwareSerial BTSerial(9, 8); // RX | TX these are pins responsible for communication between the bluetooth module and arduino
+SoftwareSerial BTSerial(8, 9); //old pinout (less comfortable to solder, now only 1 of these devices has it this way)
 
 #define MAX_SERIAL_LENGTH 200 //if you'd like to make it greater than 255 make sure to replace "byte" with "int" inside every "for loop"
 char inSerial[MAX_SERIAL_LENGTH]; //it will contain the text sent from bluetooth module and received in arduino
@@ -41,7 +41,8 @@ char inSerial[MAX_SERIAL_LENGTH]; //it will contain the text sent from bluetooth
 #define ENCODING_BYTE_DESIRED 0
 #define ENCODING_BYTE_USED 1
 #define ENCODING_BYTE_MODIFIER 2
-byte Encoding[3][100] = { //definition only applies to new devices where encoding isn't saved at EEPROM yet. By default it's US keyboard encoding
+#define ENCODING_SIZE 72
+byte Encoding[3][ENCODING_SIZE] = { //definition only applies to new devices where encoding isn't saved at EEPROM yet. By default it's US keyboard encoding
   {0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x41, 0x4D, 0x51, 0x57, 0x59, 0x5A, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F, 0x60, 0x61, 0x69, 0x6D, 0x71, 0x77, 0x79, 0x7A, 0x7B, 0x7C, 0x7D, 0x7E},
   {0x31, 0x22, 0x33, 0x34, 0x35, 0x37, 0x22, 0x39, 0x30, 0x38, 0x3D, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3B, 0x3B, 0x2C, 0x3D, 0x2E, 0x2F, 0x32, 0x61, 0x6D, 0x71, 0x77, 0x79, 0x7A, 0x5B, 0x5C, 0x5D, 0x36, 0x2D, 0x7E, 0x61, 0x69, 0x6D, 0x71, 0x77, 0x79, 0x7A, 0x5B, 0x5C, 0x5D, 0x7E},
   {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x00, 0x81, 0x81, 0x81, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x00, 0x81, 0x00, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x00, 0x00, 0x00, 0x81, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x81, 0x81, 0x81}
@@ -54,9 +55,6 @@ byte Encoding[3][100] = { //definition only applies to new devices where encodin
 bool useMultiLangWindowsMethod = true;
 #define EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS 301
 #define EEPROM_STARTING_ADDRESS_ENCODING_NAME 302
-
-
-
 
 /*
  * keypad values copied from http://forum.arduino.cc/index.php?topic=266688.msg1880647#msg1880647
@@ -76,19 +74,6 @@ byte KEYPAD[10] = {
   233
 };
 
-#define KEYPAD_0 234
-#define KEYPAD_1 225
-#define KEYPAD_2 226
-#define KEYPAD_3 227
-#define KEYPAD_4 228
-#define KEYPAD_5 229
-#define KEYPAD_6 230
-#define KEYPAD_7 231
-#define KEYPAD_8 232
-#define KEYPAD_9 233 
-
-
-
 unsigned long previousSendingTime = 0; // used for sending setting data updates to the phone (current keyboard encoding, multilang thing)
 char encodingName[30]; 
 
@@ -100,7 +85,6 @@ void setup()
   Mouse.begin();
 
   Serial.begin(9600);
-
 
   /*
   //TRIGGER TRICK
@@ -184,7 +168,7 @@ void loop()
 
     inSerial[i]='\0';
     if(LOG_SERIAL){Serial.write(inSerial);} //it's useful for checking what text arduino receives from android but it makes the mouse movement laggy if the serial monitor is closed
-    Serial.write("\n");
+    Serial.write(F("\n"));
     
     Check_Protocol(inSerial);        
   }
@@ -205,14 +189,14 @@ void SavedMultiLangMethodWindowsCheck()
   EEPROM.get(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, useMultiLangWindowsMethod);
   if(LOG_SERIAL)
   { 
-    Serial.print("MultiLang method (Windows only) setting has been read from the EEPROM - ");
+    Serial.print(F("MultiLang method (Windows only) setting has been read from the EEPROM - "));
     if(useMultiLangWindowsMethod)
     {
-      Serial.println("it's enabled.");
+      Serial.println(F("it's enabled."));
     }
     else
     {
-      Serial.println("it's disabled.");
+      Serial.println(F("it's disabled."));
     }
   }
 }
@@ -225,9 +209,9 @@ void SavedEncodingAvailabilityCheck() //rewrites the default US encoding with th
   {
     for(byte i=0;i<3; i++)
     {
-      for(byte offset=0; offset<100; offset++)
+      for(byte offset=0; offset<ENCODING_SIZE; offset++)
       {
-        EEPROM.get(offset+1+(100*i), Encoding[i][offset]); //+1 because the 0 address holds trigger bool for tricky activation method
+        EEPROM.get(offset+1+(ENCODING_SIZE*i), Encoding[i][offset]); //+1 because the 0 address holds trigger bool for tricky activation method
         if(LOG_SAVED_ENCODING_EEPROM)
         {
           Serial.print(Encoding[i][offset], HEX);
@@ -524,7 +508,7 @@ void Check_Protocol(char *inStr)
         break;
       default:
         {
-          Serial.print("Error: Incorrect encoding factor.");
+          Serial.print(F("Error: Incorrect encoding factor."));
           return;
         }
         break;
@@ -543,28 +527,28 @@ void Check_Protocol(char *inStr)
       if(LOG_SAVED_ENCODING_EEPROM)
       {
         Serial.print(Encoding[encodingFactor][offset/2], HEX);
-        Serial.print("-");
+        Serial.print(F("-"));
         Serial.print(offset);
-        Serial.print("  ");       
+        Serial.print(F("  "));       
       }
     }  
     
-    if(LOG_SAVED_ENCODING_EEPROM){Serial.print("\nSaved to EEPROM:\n");}
+    if(LOG_SAVED_ENCODING_EEPROM){Serial.print(F("\nSaved to EEPROM:\n"));}
 
     //save to EEPROM
-    for(byte offset=0; offset<100; offset++)
+    for(byte offset=0; offset<ENCODING_SIZE; offset++)
     {
       Encoding[encodingFactor][offset] = ((offset<(strlen(inStr)/2)) ? Encoding[encodingFactor][offset] : 0);
-      EEPROM.put(offset+1+(100*encodingFactor), Encoding[encodingFactor][offset]); //+1 because the 0 address holds trigger bool for tricky activation method
+      EEPROM.put(offset+1+(ENCODING_SIZE*encodingFactor), Encoding[encodingFactor][offset]); //+1 because the 0 address holds trigger bool for tricky activation method
       
       if(LOG_SAVED_ENCODING_EEPROM)
       {
         Serial.print(Encoding[encodingFactor][offset], HEX);
-        Serial.print(",");
+        Serial.print(F(","));
       }
     }
 
-    if(LOG_SAVED_ENCODING_EEPROM){Serial.print("\n\n");}
+    if(LOG_SAVED_ENCODING_EEPROM){Serial.print(F("\n\n"));}
     
   } 
 
@@ -611,13 +595,13 @@ void Check_Protocol(char *inStr)
     {
       useMultiLangWindowsMethod = true;
       EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, true);
-      if(LOG_SERIAL){Serial.println("MultiLang method (Windows only) has been enabled.");}
+      if(LOG_SERIAL){Serial.println(F("MultiLang method (Windows only) has been enabled."));}
     }
     else if(!strcmp(inStr,"Disabled")) 
     {
       useMultiLangWindowsMethod = false;
       EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, false);
-      if(LOG_SERIAL){Serial.println("MultiLang method (Windows only) has been disabled.");}
+      if(LOG_SERIAL){Serial.println(F("MultiLang method (Windows only) has been disabled."));}
     }
   }
   
@@ -905,13 +889,5 @@ bool IsException(char c)
   }
   return false;
 }
-
-
-
-
-
-
-
-
 
 
