@@ -1,3 +1,6 @@
+**04/08/2017 - 18:50**  
+-the application is now available in the Google Play Store :) [link](https://play.google.com/store/apps/details?id=appinventor.ai_michalmonday17.supremeDuck)
+
 **04/08/2017 - 13:30**   
 -decreased buffer size of encoding data (it was unnecessarily big)  
 -used F() function for debugging strings (so now they are stored in flash memory instead of the dynamic memory)  
