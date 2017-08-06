@@ -1,2 +1,2 @@
 Tutorial is available at:  
-https://github.com/michalmonday/supremeDuck/wiki
+https://github.com/michalmonday/supremeDuck/wiki/DIY-Tutorial
