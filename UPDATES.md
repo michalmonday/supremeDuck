@@ -1,3 +1,9 @@
+**12/08/2017**  
+-Just to let you know I'm still working on this project, it isn't just published and left. Soon it should be able to use the "ducky script" language. Also the MIT app inventor app will probably become easier to modify and it will be easier to add your own presets. Currently it seems like a mess, mostly because I was new to it when I started building the app.
+
+**06/08/2017**  
+-fixed minor bugs
+
 **04/08/2017 - 18:50**  
 -the application is now available in the Google Play Store :) [link](https://play.google.com/store/apps/details?id=appinventor.ai_michalmonday17.supremeDuck)
 
