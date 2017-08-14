@@ -1,3 +1,8 @@
+**14/08/2017**  
+-added ability to use "ducky script" ("PAUSE", "BREAK", "DEFAULTDELAY", "PRINTSCREEN", "SCROLLLOCK" are not implemented though)  
+-fixed minor bugs  
+-simplified some of the MIT app inventor 2 components (implemented global lists variables instead of using countless "if then else" statements, the lists are located around the bottom of the project "block canvas" and can be easily edited/expanded)  
+
 **12/08/2017**  
 -Just to let you know I'm still working on this project, it isn't just published and left. Soon it should be able to use the "ducky script" language. Also the MIT app inventor app will probably become easier to modify and it will be easier to add your own presets. Currently it seems like a mess, mostly because I was new to it when I started building the app.
 

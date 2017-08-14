@@ -7,6 +7,13 @@ Created by Michal Borowski
 
 /* 
  *  
+ *  
+ *  
+ *  
+ *  
+ *  
+ *  
+ *  
  * 
  * 
  */
@@ -76,7 +83,8 @@ byte KEYPAD[10] = {
 };
 
 unsigned long previousSendingTime = 0; // used for sending setting data updates to the phone (current keyboard encoding, multilang thing)
-char encodingName[30]; // it will store the name of the currently used language encoding so it can be sent and displayed on the application (e.g  US, UK - gb, Deutch - ger, etc.)
+unsigned long lastOKsendingTime = 0;
+char encodingName[30] = {"US"}; // it will store the name of the currently used language encoding so it can be sent and displayed on the application (e.g  US, UK - gb, Deutch - ger, etc.)
 
 char commandLineObfuscationString[54] = "echo off & mode 20,1 & title svchost & color 78 & cls"; // line used to make the command prompt less visible
 
@@ -134,18 +142,24 @@ void loop()
 
     inSerial[i]='\0'; // end the string with 0
     if(LOG_SERIAL){Serial.write(inSerial);} //it's useful for checking what text arduino receives from android but it makes the mouse movement laggy if the serial monitor is closed
-    Serial.write(F("\n")); // new line, btw "F()" function helps with memory management, instead of being saved in dynamic memory it gets saved in the larger storage
+    Serial.write("\n"); // new line, btw "F()" function helps with memory management, instead of being saved in dynamic memory it gets saved in the larger storage
     Check_Protocol(inSerial);  // main checking function, all the functionality gets triggered there depending on what it received from the bluetooth module      
+    BTSerial.print("OK"); // it wasn't necessary before, but the ducky script functionality requires the Arduino to say: "OK, I already typed the last line/key you've sent me, so you can send the next one", otherwise there would have to be a bigger delay   
+    lastOKsendingTime = millis();
   }
+  
 
   unsigned long lastSendingTime = millis(); // needed to measure time and check when the last chunk of data was sent to mobile phone (it's a part of 2-way communication)
-  if(lastSendingTime - previousSendingTime > 1000) // send update to the mobile phone about the current language encoding and whether MultiLang method is used
+  if(lastSendingTime - previousSendingTime > 2500) // send update to the mobile phone about the current language encoding and whether MultiLang method is used
   {
+    if(lastSendingTime - lastOKsendingTime > 1000) // additional check - if "OK" has been sent during the last second then avoid sending this data, just in case if there was further communication incomming
+    {
       previousSendingTime = lastSendingTime;
       char data[40];
       sprintf(data,"data=%i,%s,end", useMultiLangWindowsMethod,encodingName); //format string
       BTSerial.write(data); // send the data to the mobile app or any other bluetooth device that is connected to it right now
       for(byte i=0;i<40;i++){data[i]=0;} //reset "data" (idk if it's even necessary)
+    }
   }
 } 
 
@@ -195,6 +209,7 @@ void SavedEncodingAvailabilityCheck() //rewrites the default US encoding with th
     Serial.print(F("\n"));
   }
 }
+
 
 void MyFuncMouseMove(char *inStr)
 {
@@ -570,6 +585,62 @@ void Check_Protocol(char *inStr)
       if(LOG_SERIAL){Serial.println(F("MultiLang method (Windows only) has been disabled."));}
     }
   }
+
+
+
+  //ducky script
+  //*  PDK_HC:FF,a,end    // Press double key _ hex + char
+  //*  PDK_HH:FF,FF,end   // Press double key _ hex + hex
+  //*  PK:a,end  // Press key char
+  //*  PKH:FF,end // Press key hex
+  //*  WAIT:5000,end // delay(5000);
+  if(StrStartsWith(inStr,"PDK_HC:") && StrEndsWith(inStr, ",end"))
+  {
+    ExtractDeliveredText(inStr, 7);
+    inStr[4] = 0;
+    
+    Keyboard.press(HexToChar(inStr));
+    delay(5);
+    //Print(inStr[3]);
+    Keyboard.press(inStr[3]);
+    delay(5);
+    Keyboard.releaseAll();  
+  }
+
+  if(StrStartsWith(inStr,"PDK_HH:") && StrEndsWith(inStr, ",end"))
+  {
+    ExtractDeliveredText(inStr, 7);
+    char key_1 = HexToChar(inStr);
+    char key_2[2] = {HexToChar(inStr+2),"/0"}; 
+    Keyboard.press(key_1);
+    delay(5);
+    //Print(key_2);
+    Keyboard.press(key_2);
+    delay(5);
+    Keyboard.releaseAll();   
+  }
+
+  if(StrStartsWith(inStr,"PK:") && StrEndsWith(inStr, ",end"))
+  {
+    ExtractDeliveredText(inStr, 3);
+    inStr[1] = 0;
+    Print(inStr[0]);
+  }
+
+  if(StrStartsWith(inStr,"PKH:") && StrEndsWith(inStr, ",end"))
+  {
+    ExtractDeliveredText(inStr, 4);
+    char key[2] = {HexToChar(inStr), '\0'};
+    Print(key);
+  }
+
+  if(StrStartsWith(inStr,"WAIT:") && StrEndsWith(inStr, ",end"))
+  {
+    ExtractDeliveredText(inStr, 5);
+    int val;
+    sscanf(inStr, "%i", &val);
+    delay(val);
+  }
   
   for(byte i=0;i<MAX_SERIAL_LENGTH;i++){inStr[i]=0;}
 }
@@ -693,7 +764,7 @@ void Print(char *inStr)
   int enc_index; 
   for(byte i=0; i<strlen(inStr); i++)//for each character in the string
   {  
-    if (useMultiLangWindowsMethod && ((!isalnum(inStr[i]) && inStr[i] != ' ') || IsException(inStr[i]))) //if character is punctuation or requires different button to be pressed in different keyboard language settings then use alt+numpad method
+    if (useMultiLangWindowsMethod && !IsModifier(inStr[i]) && ((!isalnum(inStr[i]) && inStr[i] != ' ') || IsException(inStr[i]))) //if character is punctuation or requires different button to be pressed in different keyboard language settings then use alt+numpad method
     //if(IsCharSpecial(inStr[i]))
     {
       //Serial.print("special char = ");
@@ -858,6 +929,22 @@ bool IsException(char c)
 }
 
 
+bool IsModifier(char c)
+{
+  byte b = (byte)c;
+  if((b >= 128 && b <=135) || (b >= 176 && b <=179) || (b >= 193 && b <=205) || (b >= 209 && b <=218))
+  {
+    if(LOG_SERIAL){Serial.println("Is modifier");}
+    return true;
+  }
+  return false;
+}
+
+char HexToChar(char *inStr)
+{
+  char strValBuff[3]={inStr[0],inStr[1],'\0'}; 
+  return (char)strtoul((char*)strtok(strValBuff, " "),NULL,16);
+}
 
 
 
