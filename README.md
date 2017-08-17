@@ -39,4 +39,8 @@ Keyboard simulating devices work differently depending on the system language se
 **Tutorial and usage info are available in [wiki section](https://github.com/michalmonday/supremeDuck/wiki)**  
 
 
+![](http://i.imgur.com/R53zLZQ.png)
+
 ![](http://i.imgur.com/LV6Ix5R.jpg)
+
+![](http://i.imgur.com/HPkwBK5.png)
