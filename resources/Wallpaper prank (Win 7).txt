@@ -1,0 +1,33 @@
+REM Info and source: https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payload---Wallpaper-prank
+REM Author: FlyinGrub
+REM Description: Minimizes all windows to desktop, takes screenshot, disables desktop icons, saves screenshot in %userprofile% and sets as wallpaper
+
+
+GUI d
+DELAY 100
+PRINTSCREEN
+DELAY 100
+MENU
+DELAY 70
+STRING h
+DELAY 50
+STRING b
+DELAY 50
+GUI r
+DELAY 200
+STRING mspaint
+ENTER
+DELAY 500
+CTRL v
+DELAY 300
+ALT f
+DELAY 300
+STRING b
+DELAY 300
+ENTER
+DELAY 300
+STRING a1z2.png
+ENTER
+ALT F4
+DELAY 300
+GUI d
