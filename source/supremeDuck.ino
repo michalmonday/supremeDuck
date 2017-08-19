@@ -6,7 +6,7 @@ Created by Michal Borowski
 
 
 /* 
- *  
+ *
  *  
  *  
  *  
@@ -18,7 +18,9 @@ Created by Michal Borowski
  * 
  */
 
-#include <SoftwareSerial.h> // Allows communication between the Arduino and HC-06 module.
+#define Version "1.03" // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
+
+#include <SoftwareSerial.h> // Allows com.munication between the Arduino and HC-06 module.
 #include "Keyboard.h" // library which provides all the functions to emulate Human Interface Device
 #include "Mouse.h" // the same as above
 #include <EEPROM.h> // Electrically Erasable Programmable Read-Only Memory, it allows to save some values that will prevail even when the device is disconnected from power.
@@ -641,6 +643,17 @@ void Check_Protocol(char *inStr)
     sscanf(inStr, "%i", &val);
     delay(val);
   }
+
+
+  if(!strcmp(inStr, "VER")) // it means that the mobile phone app asks what version of the code is used on Arduino, to make sure that the same it's not different from the mobile app
+  {
+    char data[13];
+    sprintf(data,"ver=%s,end", Version); //format string
+    BTSerial.write(data); // send the data to the mobile app or any other bluetooth device that is connected to it right now
+    for(byte i=0;i<13;i++){data[i]=0;} //reset "data" (idk if it's even necessary)
+  }
+
+
   
   for(byte i=0;i<MAX_SERIAL_LENGTH;i++){inStr[i]=0;}
 }
@@ -814,7 +827,7 @@ void Print(char *inStr)
       */
       
     }
-    else
+    else // if the standard/normal key can be pressed
     {
       Keyboard.press(inStr[i]);
       //Serial.print(", ");
@@ -825,7 +838,7 @@ void Print(char *inStr)
   }
 }
 
-int GetKeyIndex(byte c, byte* char_array)
+int GetKeyIndex(byte c, byte* char_array) // find and the position of the value in the array
 {
   for(byte i=0;i<strlen(char_array);i++)
   {

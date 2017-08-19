@@ -1,3 +1,10 @@
+**19/08/2017**  
+-added new presets, ducky scripts (also moved them from pastebin into github), youtube videos (songs + bunch of "one liners") and websites (bunch of gifs)  
+-removed few not working presets (kind of dead links)  
+-added "Settings" category in the mobile app  
+-added version check. After picking the bluetooth device and connecting to it the version check will be performed to make sure that the movile app version is the same as the Arduino code version. Notification will be displayed if these don't match. (This feature will work only from version 1.03 and newer)  
+-further simplified the MIT app inventor 2 project (supremeDuck.aia) 
+
 **14/08/2017**  
 -added ability to use "ducky script" ("PAUSE", "BREAK", "DEFAULTDELAY", "PRINTSCREEN", "SCROLLLOCK" are not implemented though)  
 -fixed minor bugs  
