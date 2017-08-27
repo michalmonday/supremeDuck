@@ -22,9 +22,10 @@ Plug it in to your friend's PC and by pressing a button on your android smartpho
 
 
 **Is it going to work on any PC and work work instantly?**  
-Idk, it's based on arduino, after connecting it to the PC it's recognised as "USB input device" and "Arduino", it worked instantly on my freshly re-installed windows 8 and also on windows 10 where I deleted arduino drivers. But for example at my college (win 7) it pops up "Installing drivers" in the bottom right corner, it works in both scenarios if the installation is finished or cancelled, however it doesn't work until it's ended in some way. It's recognised by PC the same as "[Malduino](https://www.indiegogo.com/projects/malduino-badusb-arduino-usb#/)" by Seytonic:
+Idk, it's based on Arduino, after connecting it to the PC it's recognised as "USB input device" and "Arduino", it worked instantly on my freshly re-installed windows 8 and also on windows 10 where I deleted arduino drivers. But for example at my college (win 7) it pops up "Installing drivers" in the bottom right corner, it works in both scenarios if the installation is finished or cancelled, however it doesn't work until it's ended in some way. It's recognised by PC the same as "[Malduino](https://www.indiegogo.com/projects/malduino-badusb-arduino-usb#/)" by Seytonic:
 > Will the MalDuino work on computer X?
 > The MalDuino works just like an arduino leonardo, so if a leonoardo can do it on a certain computer, so can a MalDuino. It should be noted that I have had some reports of people having difficulty running scripts on windows 7, however this is not widespread as far as I know and I am looking into this.
+Potentially it could work with any system however the functions are designed to work with Windows.  
 
 **What makes it stand out from other similar projects?**  
 Keyboard simulating devices work differently depending on the system language setting. At the moment (25/7/17) the original HAK5 "rubber ducky", "Malduino" and other arduino based HID projects require the user to pick a keyboard language setting before uploading the code. It means that device has to be re-programmed before using it with different PCs if they have different language settings. That's not the case with supremeDuck, it handles the aforementioned problem in 2 ways:
