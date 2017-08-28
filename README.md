@@ -44,4 +44,4 @@ Keyboard simulating devices work differently depending on the system language se
 
 ![](http://i.imgur.com/LV6Ix5R.jpg)
 
-![](http://i.imgur.com/HPkwBK5.png)
+![](http://i.imgur.com/ofYEmmX.png)
