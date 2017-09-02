@@ -463,7 +463,23 @@ void Check_Protocol(char *inStr)
     byte encodingFactor=255;
     switch (inStr[4]) //5th letter is D, U or M depending on the type of 3 encoding factors
     {
-      case 'D':
+      /*
+       * the encoding data is large so the app sends the data in 4 steps, first sends the desired characters, the ones that the user wants to type (marked by the letter "D")
+       * then it sends the used characters, the ones that have to be "pressed" in order to type the desired characters while using a specific language settings (these "Used characters" are marked by the letter "U")
+       * then it sends the modifier keys, they are used to know whether some shift or alt has to be pressed together with the "Used char" to achieve "Desired char" being typed on the target PC  
+       * the last message sent is just a name of the language (e.g. UK - gb)
+       * 
+       * Let's pretend that I want to type the letter "n" which is 0x6D in ascii table. Let's assume hypothetically that in order to type that letter on a PC with a Japanese keyboard setting
+       * I have to press "z" + shift that are respectively 0x7A in ascii table and 0x81 (according to not ascii table but this: https://www.arduino.cc/en/Reference/KeyboardModifiers)
+       * The encoding data which will allow me to correctly type letter "c" in such case would be:
+       * ENC,D:6D,end
+       * ENC,U:7A,end
+       * ENC,M:81,end
+       * ENC,N:HypotheticalJapanese - hj,end
+       * 
+       * The above example would send the data required for 1 char, the implementation of this system sends no more than 72 bytes/chars at once.
+       */
+      case 'D': 
         {
           encodingFactor=0;
         }     
@@ -644,8 +660,7 @@ void Check_Protocol(char *inStr)
     delay(val);
   }
 
-
-  if(!strcmp(inStr, "VER")) // it means that the mobile phone app asks what version of the code is used on Arduino, to make sure that the same it's not different from the mobile app
+  if(!strcmp(inStr, "VER")) // if the mobile phone app asks what version of the code is used on Arduino, to make sure that the same it's not different from the mobile app
   {
     char data[13];
     sprintf(data,"ver=%s,end", Version); //format string
@@ -803,7 +818,7 @@ void Print(char *inStr)
   
     
     enc_index = GetKeyIndex(inStr[i], Encoding[ENCODING_BYTE_DESIRED]);
-    if(enc_index < 256) //256 means it's a key not present in the array (key which does not need a substitution because it is the same for any keyboard setting)
+    if(enc_index < 256 && !IsModifier(inStr[i])) //256 means it's a key not present in the array (key which does not need a substitution because it is the same for any keyboard setting)
     {    
       if(Encoding[ENCODING_BYTE_MODIFIER][enc_index] > 0)
       {
@@ -929,7 +944,7 @@ bool IsCharSpecial(char c)
 }
 */
 
-bool IsException(char c)
+bool IsException(char c) // check whether this character is one of these that have to be typed differently using other language settings
 {
   for(byte i=0; i<EXCEPTIONS_SIZE; i++)
   {
@@ -942,7 +957,7 @@ bool IsException(char c)
 }
 
 
-bool IsModifier(char c)
+bool IsModifier(char c) // is key like shift, alt, "GUI" key, etc.
 {
   byte b = (byte)c;
   if((b >= 128 && b <=135) || (b >= 176 && b <=179) || (b >= 193 && b <=205) || (b >= 209 && b <=218))
@@ -953,7 +968,7 @@ bool IsModifier(char c)
   return false;
 }
 
-char HexToChar(char *inStr)
+char HexToChar(char *inStr) // function which takes a pointer to a string with 2 characters like "FF" as a parameter and returns a number converted from that string, interpretting it as a 2 digit hexadecimal value 
 {
   char strValBuff[3]={inStr[0],inStr[1],'\0'}; 
   return (char)strtoul((char*)strtok(strValBuff, " "),NULL,16);

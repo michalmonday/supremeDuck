@@ -1,3 +1,6 @@
+**02/09/2017**  
+-fixed Arduino code bug, in some language settings "Enter" and other key modifiers were substituted with other keys(thanks to HydrexHD who reported it)  
+
 **19/08/2017**  
 -added new presets, ducky scripts (also moved them from pastebin into github), youtube videos (songs + bunch of "one liners") and websites (bunch of gifs)  
 -removed few not working presets (kind of dead links)  
