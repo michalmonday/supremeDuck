@@ -1,4 +1,4 @@
-**06/04/2018** 
+**06/04/2018**  
 -organized mit app inventor project (collapsed all the blocks so they're close together now, don't lag as much and are much easier to handle)  
 -fixed small bug  
 -moved comments to the side in the code because they made it less readable 
