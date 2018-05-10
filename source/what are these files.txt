@@ -1,3 +1,5 @@
 .ino is an arduino sketch, it can be opened with Arduino IDE.
 
 .aia is an MIT app inventor 2 project, you can import it to http://ai2.appinventor.mit.edu and edit the app as you wish and generate .apk file from it.
+
+.apk is the application for Android

@@ -1,3 +1,8 @@
+**10/05/2018 - 6pm**  
+-added Alt+Tab  
+-added arrow keys in "Plain text" and "Execute program" categories  
+-fixed Enter button bug  
+
 **10/05/2018**  
 -updated mobile app  
 -adding/editing/removing presets is now available through the following ways:  
