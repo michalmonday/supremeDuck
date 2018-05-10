@@ -1,3 +1,10 @@
+**10/05/2018**  
+-updated mobile app  
+-adding/editing/removing presets is now available through the following ways:  
+1. Directly from "Categories -> Manage presets" menu  
+2. By modifying files at "/supremeDuck_data/presets/custom_Category.txt" (for all categories except ducky scripts)  
+3. By adding/modifying files at "/supremeDuck_data/ducky_scripts/" (ducky scripts only, files must have .txt extension)  
+
 **06/04/2018**  
 -organized mit app inventor project (collapsed all the blocks so they're close together now, don't lag as much and are much easier to handle)  
 -fixed small bug  

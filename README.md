@@ -1,6 +1,5 @@
 # supremeDuck
-"Rubber ducky" with android support using bluetooth
-
+"Rubber ducky" controlled by android using bluetooth.  
 
 
 **What is it?**  
@@ -32,12 +31,12 @@ Keyboard simulating devices work differently depending on the system language se
   1. It gives an ability to dynamically change the desired language settings by using the android app whenever needed (the device must    be turned on while changing it). 
   2. It takes advantage of the fact that Windows allows a tricky method of typing characters (by using ALT + NUMPAD keys it is possible to type the ASCII code and the desired character will be typed). As a result the device can be set to work with all of the most frequently used language settings without the need to change anything (as long as it's used on Windows). In the options of the android app it's possible to dynamically enable and disable it (it's called "MultiLang - Windows only" in the categories list).
   
-**How to get it?**
-1. Visit and follow the tutorial mentioned below.
+**How to make it or get it?**
+1. Visit and follow [this tutorial](https://github.com/michalmonday/supremeDuck/wiki/DIY-Tutorial).
 2. Buy it from me. It's available at: http://monday.pythonanywhere.com
 
 
-**Tutorial and usage info are available in [wiki section](https://github.com/michalmonday/supremeDuck/wiki)**  
+**Usage and more info is available in [wiki section](https://github.com/michalmonday/supremeDuck/wiki)**  
 
 
 ![](http://i.imgur.com/R53zLZQ.png)
