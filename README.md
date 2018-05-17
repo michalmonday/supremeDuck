@@ -37,7 +37,7 @@ Keyboard simulating devices work differently depending on the system language se
 
 
 **Usage and more info is available in [wiki section](https://github.com/michalmonday/supremeDuck/wiki)**  
-
+**List of updates is [here](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)**  
 
 ![](http://i.imgur.com/R53zLZQ.png)
 
