@@ -1,3 +1,8 @@
+/*
+	Edit (28/05/2018):
+	The new update (1.05) allows to change bluetooth name and pin directly from user interface (Categories -> Settings).
+*/
+
 /*  
  *  The code below allows for communication between: the user <-> PC <-> Arduino <-> Bluetooth module.
  *  The bluetooth module expects specific commands to be delivered to it that start with "AT".

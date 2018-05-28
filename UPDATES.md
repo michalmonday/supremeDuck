@@ -1,3 +1,8 @@
+**28/05/2018**  
+-ability to change bluetooth name and pin from user interface (Categories -> Settings)  
+-added ctrl+alt+del, right mouse click (RMB) and backspace button (available in "Plain text" and "Execute program" categories)  
+-added "Live text execution" checkbox, if it's checked then any letters typed into text box will be automatically typed on the target PC (available in "Plain text" and "Execute program" categories)  
+
 **17/05/2018**  
 -small app update (1.041 - does not require reflashing of supremeDuck device if its version is 1.04)  
 -fixed vertical order for "Manage presets" panel because it was too low and while editing the "Content" textbox it was hidden behind keypad  

