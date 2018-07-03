@@ -21,7 +21,7 @@ Plug it in to your friend's PC and by pressing a button on your android smartpho
 
 
 **Implementation details**  
-The Android application was made using "MIT App Inventor 2" and is open source (see source/supremeDuck.aia). Initially it was made with Arduino Pro Micro and HC-06 bluetooth module. Currently it can also be made and used with Esp8266 wi-fi module instead of HC-06.  
+The Android application was made using "MIT App Inventor 2" and is open source (see source/supremeDuck.aia). Initially it was made with Arduino Pro Micro and HC-06 bluetooth module. Currently it can also be made and used with Esp8266 wi-fi module instead of HC-06 using the same hardware setup spacehuhn used [here](https://github.com/spacehuhn/wifi_ducky).  
 
 
 **Is it going to work on any PC and work work instantly?**  
