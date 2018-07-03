@@ -1,5 +1,8 @@
-.ino is an arduino sketch, it can be opened with Arduino IDE.
+supremeDuck.ino is an arduino sketch, it can be opened with Arduino IDE.
 
-.aia is an MIT app inventor 2 project, you can import it to http://ai2.appinventor.mit.edu and edit the app as you wish and generate .apk file from it.
+supremeDuck_wifi.ino is sketch for Esp8266 module (if it's used instead of HC-06 bluetooth)
 
-.apk is the application for Android
+supremeDuck.aia is an MIT app inventor 2 project, you can import it to http://ai2.appinventor.mit.edu and edit the app as you wish and generate .apk file from it.
+
+supremeDuck.apk is the application for Android (also available on google play store)
+

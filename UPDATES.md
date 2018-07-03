@@ -1,3 +1,6 @@
+**03/07/2018**  
+-added wi-fi Esp8266 module support as an alternative to HC-06 bluetooth module (user can control 2 devices simultaneously, 1 using bluetooth, 1 using wi-fi)  
+
 **28/05/2018**  
 -ability to change bluetooth name and pin from user interface (Categories -> Settings)  
 -added ctrl+alt+del, right mouse click (RMB) and backspace button (available in "Plain text" and "Execute program" categories)  

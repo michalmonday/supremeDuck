@@ -18,6 +18,37 @@ Created by Michal Borowski
  */
 
 
+
+
+
+#define Version "1.06"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
+                                               // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
+                                                  
+//#define USE_TX_RX_PINS                       // uncomment this line to use TX/RX pins of pro micro instead of 9/8 pins and software serial library                                                  
+#ifdef USE_TX_RX_PINS
+  #define App Serial1                           
+#else
+  #include <SoftwareSerial.h>                  // Allows communication between the Arduino and HC-06 module using various I/O pins
+  //SoftwareSerial App(16, 15);                // it could also work
+  SoftwareSerial App(9, 8);                    // RX | TX these are pins responsible for communication between the bluetooth/wifi module and arduino
+  //SoftwareSerial App(8, 9);                  // old pinout (less comfortable to solder, now only 1 of these devices has it this way)
+#endif
+
+#include <EEPROM.h>                               // Electrically Erasable Programmable Read-Only Memory, it allows to save some values that will prevail even when the device is disconnected from power.
+   
+
+#define DEBUG_MODE false                          // does not execute the code till serial monitor is opened
+#define LOG_SAVED_ENCODING_EEPROM false
+#define LOG_SERIAL false                          //setting to true makes mouse movement laggy if the serial monitor isn't open
+
+#define HC_BAUDRATE 9600                          //(default baud rate of hc-06) It's the speed of communication between Arduino and HC-06, it shouldn't be changed without additionally changing it on the HC-06.
+
+/*
+#define EEPROM_ADDRESS_TRIGGER_TRICK 0
+trick = plug it in + plug out within 3 secs => special function is triggered(that special function is commented out in "setup" funciton)
+*/
+                                                  
+
 /* NICOHOOD BOOTKEYBOARD STUFF */
 //#define USE_NICOHOOD_BOOTKEYBOARD               //comment this out if it shouldn't be used (I couldn't get alt+numpad to work with this for some reason so I'd just leave it)
 
@@ -30,24 +61,6 @@ Created by Michal Borowski
   #define myKeyboard Keyboard                     // custom variable so it's easy to switch between "BootKeyboard" by NicoHood (https://github.com/NicoHood/HID/tree/master/examples/Keyboard/BootKeyboard) and the normal keyboard
 #endif
 
-#define Version "1.05"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
-#include <SoftwareSerial.h>                       // Allows com.munication between the Arduino and HC-06 module.
-#include <EEPROM.h>                               // Electrically Erasable Programmable Read-Only Memory, it allows to save some values that will prevail even when the device is disconnected from power.
-                                                  // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
-#define DEBUG_MODE false                          // does not execute the code till serial monitor is opened
-#define LOG_SAVED_ENCODING_EEPROM false
-#define LOG_SERIAL false                         //setting to true makes mouse movement laggy if the serial monitor isn't open
-
-#define HC_BAUDRATE 9600                          //(default baud rate of hc-06) It's the speed of communication between Arduino and HC-06, it shouldn't be changed without additionally changing it on the HC-06.
-
-/*
-#define EEPROM_ADDRESS_TRIGGER_TRICK 0
-trick = plug it in + plug out within 3 secs => special function is triggered(that special function is commented out in "setup" funciton)
-*/
-                                                  
-//SoftwareSerial BTSerial(16, 15);                // it could also work
-SoftwareSerial BTSerial(9, 8);                    // RX | TX these are pins responsible for communication between the bluetooth module and arduino
-//SoftwareSerial BTSerial(8, 9);                  // old pinout (less comfortable to solder, now only 1 of these devices has it this way)
 
 #define MAX_SERIAL_LENGTH 200                     // Maximum lenght of data received from the bluetooth module. If you'd like to make it greater than 255 make sure to replace "byte" with "int" inside every "for loop"
 char inSerial[MAX_SERIAL_LENGTH];                 //it will contain the text sent from bluetooth module and received in arduino
@@ -117,7 +130,7 @@ unsigned long last_alt_tab_time = 0;
 
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {
-  BTSerial.begin(HC_BAUDRATE);                  // begin communication with the bluetooth module
+  App.begin(HC_BAUDRATE);                  // begin communication with the bluetooth module
   //Keyboard.begin();                           // begin emulating keyboard
   myKeyboard.begin();
   Mouse.begin();                                // begin emulating mouse
@@ -183,15 +196,15 @@ void setup()                                    // setup function is a part of e
 void loop()                                   // loop function is also a part of every Arduino sketch but gets called over again after it returns/finishes unlike "setup" function
 { 
   byte i=0; 
-  if (BTSerial.available() > 0)               // check whether there's any data received by the bluetooth module
+  if (App.available() > 0)               // check whether there's any data received by the bluetooth module
   {        
     unsigned long previousByteRec = millis(); unsigned long lastByteRec = millis();               // timing functions (needed for reliable reading of the BTserial)
     while (100 > lastByteRec - previousByteRec)                                                   // if no further character was received during 100ms then proceed with the amount of chars that were already received (notice that "previousByteRec" gets updated only if a new char is received)
     {      
       lastByteRec = millis();   
-      while (BTSerial.available() > 0 && i < MAX_SERIAL_LENGTH-1) 
+      while (App.available() > 0 && i < MAX_SERIAL_LENGTH-1) 
       {
-        inSerial[i]=BTSerial.read(); i++;                               // read bluetooth data (copy it to an array)         
+        inSerial[i]=App.read(); i++;                               // read bluetooth data (copy it to an array)         
         if(i == 16)                                                     // mouse movement check (only if the bluetooth receives exactly 16 characters)
         {
           if(StrStartsWith(inSerial, "MM:") && StrEndsWith(inSerial, ",end")){if(LOG_SERIAL){Serial.println(inSerial);} inSerial[i]='\0'; MyFuncMouseMove(inSerial);i = 0;}     //MM:L,U,3,1,end (mouse movement)}
@@ -204,11 +217,12 @@ void loop()                                   // loop function is also a part of
     if(LOG_SERIAL){Serial.write(inSerial);}             //it's useful for checking what text arduino receives from android but it makes the mouse movement laggy if the serial monitor is closed
     Serial.write("\n");                                 // new line, btw "F()" function helps with memory management, instead of being saved in dynamic memory it gets saved in the larger storage
     Check_Protocol(inSerial);                           // main checking function, all the functionality gets triggered there depending on what it received from the bluetooth module      
-    BTSerial.print("OK");                               // it wasn't necessary before, but the ducky script functionality requires the Arduino to say: "OK, I already typed the last line/key you've sent me, so you can send the next one", otherwise there would have to be a bigger delay   
+    App.print("OK");                               // it wasn't necessary before, but the ducky script functionality requires the Arduino to say: "OK, I already typed the last line/key you've sent me, so you can send the next one", otherwise there would have to be a bigger delay   
     lastOKsendingTime = millis();
   }
   
 
+  /*
   unsigned long lastSendingTime = millis();             // needed to measure time and check when the last chunk of data was sent to mobile phone (it's a part of 2-way communication)
   if(lastSendingTime - previousSendingTime > 2500)      // send update to the mobile phone about the current language encoding and whether MultiLang method is used
   {
@@ -217,10 +231,11 @@ void loop()                                   // loop function is also a part of
       previousSendingTime = lastSendingTime;
       char data[40];
       sprintf(data,"data=%i,%s,end", useMultiLangWindowsMethod,encodingName);           //format string
-      BTSerial.write(data);                                                             // send the data to the mobile app or any other bluetooth device that is connected to it right now
+      App.write(data);                                                             // send the data to the mobile app or any other bluetooth device that is connected to it right now
       memset(data, 0, 40);                                                              //reset "data" (idk if it's even necessary)
     }
   }
+  */
 
   Alt_Tab_Release_Routine();
 } 
@@ -296,7 +311,7 @@ void ChangeBluetoothCheck(){
     sprintf(at_cmd, "AT+NAME%s\0", bluetoothName);
     delay(700);
     
-    BTSerial.print(at_cmd);
+    App.print(at_cmd);
     
     if(LOG_SERIAL){
       Serial.println("Changed bluetooth name. Command used:");
@@ -304,7 +319,7 @@ void ChangeBluetoothCheck(){
     }
     
     delay(1000);
-    while(BTSerial.available() > 0){char c = BTSerial.read();}
+    while(App.available() > 0){char c = App.read();}
   }
 
   numCheck = 0;
@@ -318,7 +333,7 @@ void ChangeBluetoothCheck(){
     char at_pin_cmd[16] = {0};
     sprintf(at_pin_cmd, "AT+PIN%s\0", pin);
     delay(700);
-    BTSerial.print(at_pin_cmd);
+    App.print(at_pin_cmd);
 
     if(LOG_SERIAL){
       Serial.println("Changed bluetooth pin. Command used:");
@@ -328,7 +343,7 @@ void ChangeBluetoothCheck(){
     //Serial.println("wtf");
     
     delay(1000);
-    while(BTSerial.available() > 0){char c = BTSerial.read();}
+    while(App.available() > 0){char c = App.read();}
   }
 }
 
@@ -391,6 +406,15 @@ void EnterCommand(char *text)
 
 void Check_Protocol(char *inStr)
 {       
+
+    if(!strcmp(inStr, "Request_info\0")){
+      char data[40];
+      sprintf(data,"data=%i,%s,end", useMultiLangWindowsMethod,encodingName);           //format string
+      App.write(data); // send the data to the mobile app or any other bluetooth device that is connected to it right now     
+      //Serial.println(data);
+      memset(data, 0, 40);  
+    }
+    
     if(!strcmp(inStr, "Ctrl_alt_del\0")){
       myKeyboard.releaseAll();
       delay(20);
@@ -497,7 +521,7 @@ void Check_Protocol(char *inStr)
     if(!strcmp(inStr, "VER")){                            // if the mobile phone app asks what version of the code is used on Arduino, to make sure that the same it's not different from the mobile app
         char data[13];
         sprintf(data,"ver=%s,end", Version);          //format string
-        BTSerial.write(data);                         // send the data to the mobile app or any other bluetooth device that is connected to it right now
+        App.write(data);                         // send the data to the mobile app or any other bluetooth device that is connected to it right now
         for(byte i=0;i<13;i++){data[i]=0;}            //reset "data" (idk if it's even necessary)
     }
     
@@ -992,5 +1016,6 @@ void SetNewCharEncoding(char *inStr){
   }
   if(LOG_SAVED_ENCODING_EEPROM){Serial.print("\n\n");}
 }
+
 
 
