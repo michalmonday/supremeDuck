@@ -24,7 +24,7 @@ Created by Michal Borowski
 #define Version "1.06"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
                                                // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
                                                   
-//#define USE_TX_RX_PINS                       // uncomment this line to use TX/RX pins of pro micro instead of 9/8 pins and software serial library                                                  
+//#define USE_TX_RX_PINS  // use this line for wi-fi ducky  // uncomment this line to use TX/RX pins of pro micro instead of 9/8 pins and software serial library                                                  
 #ifdef USE_TX_RX_PINS
   #define App Serial1                           
 #else

@@ -6,3 +6,5 @@ supremeDuck.aia is an MIT app inventor 2 project, you can import it to http://ai
 
 supremeDuck.apk is the application for Android (also available on google play store)
 
+"Esp8266 version stuff" contains files needed to make the wi-fi based version (e.g. make wifi_ducky run supremeDuck software) See the link below for more info about it:
+https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wi-fi-based-version-(Esp8266)
