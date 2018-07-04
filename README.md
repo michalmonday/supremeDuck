@@ -36,7 +36,7 @@ Keyboard simulating devices work differently depending on the system language se
   
 **How to make it or get it?**
 1. Visit and follow [this tutorial](https://github.com/michalmonday/supremeDuck/wiki/DIY-Tutorial) about the bluetooth version.  
-1a. See [this guide](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wi-fi-based-version-(Esp8266)) to see how to assemble wifi based version.  
+1a. See [this guide](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wi-fi-based-version-(Esp8266)) to see how to make the wifi based version.  
 2. Buy it from me. It's available at: http://prankingdevice.co.uk
 
 
