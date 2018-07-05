@@ -1,1 +1,1 @@
-See:  https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wi-fi-based-version-(Esp8266)
+See:  https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wifi-based-version-(Esp8266)
