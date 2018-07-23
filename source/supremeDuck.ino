@@ -24,7 +24,7 @@ Created by Michal Borowski
 #define Version "1.06"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
                                                // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
                                                   
-//#define USE_TX_RX_PINS  // use this line for wi-fi ducky  // uncomment this line to use TX/RX pins of pro micro instead of 9/8 pins and software serial library                                                  
+//#define USE_TX_RX_PINS                       // uncomment this line to use TX/RX pins of pro micro instead of 9/8 pins and software serial library                                                  
 #ifdef USE_TX_RX_PINS
   #define App Serial1                           
 #else
@@ -37,9 +37,9 @@ Created by Michal Borowski
 #include <EEPROM.h>                               // Electrically Erasable Programmable Read-Only Memory, it allows to save some values that will prevail even when the device is disconnected from power.
    
 
-#define DEBUG_MODE false                          // does not execute the code till serial monitor is opened
-#define LOG_SAVED_ENCODING_EEPROM false
-#define LOG_SERIAL false                          //setting to true makes mouse movement laggy if the serial monitor isn't open
+//#define DEBUG_MODE                                // does not execute the code till serial monitor is opened, uncomment to disable
+//#define LOG_SAVED_ENCODING_EEPROM                 // uncomment to disable
+//#define LOG_SERIAL                                // uncomment to disable
 
 #define HC_BAUDRATE 9600                          //(default baud rate of hc-06) It's the speed of communication between Arduino and HC-06, it shouldn't be changed without additionally changing it on the HC-06.
 
@@ -135,13 +135,15 @@ void setup()                                    // setup function is a part of e
   myKeyboard.begin();
   Mouse.begin();                                // begin emulating mouse
 
-  Serial.begin(9600);                           // begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
+  #ifdef LOG_SERIAL
+    Serial.begin(9600);                           // begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
+  #endif
 
-  if(DEBUG_MODE){
+  #ifdef DEBUG_MODE
     while(!Serial){
       ;
     }
-  }
+  #endif
   
   
   /*
@@ -207,15 +209,31 @@ void loop()                                   // loop function is also a part of
         inSerial[i]=App.read(); i++;                               // read bluetooth data (copy it to an array)         
         if(i == 16)                                                     // mouse movement check (only if the bluetooth receives exactly 16 characters)
         {
-          if(StrStartsWith(inSerial, "MM:") && StrEndsWith(inSerial, ",end")){if(LOG_SERIAL){Serial.println(inSerial);} inSerial[i]='\0'; MyFuncMouseMove(inSerial);i = 0;}     //MM:L,U,3,1,end (mouse movement)}
+          if(StrStartsWith(inSerial, "MM:") && StrEndsWith(inSerial, ",end")){
+              #ifdef LOG_SERIAL
+                Serial.println(inSerial);
+              #endif
+
+              //Serial.println("Length: " + String(strlen(inSerial)));
+              //Serial.println(inSerial); // debug
+
+              //Serial.println("a");
+              
+
+              
+              inSerial[i]='\0'; MyFuncMouseMove(inSerial);i = 0;
+            }     //MM:L,U,3,1,end (mouse movement)}
         }
         previousByteRec = lastByteRec;
       }    
     }
 
     inSerial[i]= 0;                                     // end the string with 0
-    if(LOG_SERIAL){Serial.write(inSerial);}             //it's useful for checking what text arduino receives from android but it makes the mouse movement laggy if the serial monitor is closed
-    Serial.write("\n");                                 // new line, btw "F()" function helps with memory management, instead of being saved in dynamic memory it gets saved in the larger storage
+    #ifdef LOG_SERIAL
+      Serial.write(inSerial);             //it's useful for checking what text arduino receives from android but it makes the mouse movement laggy if the serial monitor is closed
+      Serial.write("\n");  
+    #endif
+                                    
     Check_Protocol(inSerial);                           // main checking function, all the functionality gets triggered there depending on what it received from the bluetooth module      
     App.print("OK");                               // it wasn't necessary before, but the ducky script functionality requires the Arduino to say: "OK, I already typed the last line/key you've sent me, so you can send the next one", otherwise there would have to be a bigger delay   
     lastOKsendingTime = millis();
@@ -252,8 +270,8 @@ void Alt_Tab_Release_Routine(){
 void SavedMultiLangMethodWindowsCheck()                   // check whether the MultiLang method was used before the device turned off last time (access EEPROM by using function "EEPROM.get(address, my_var);")
 {
   EEPROM.get(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, useMultiLangWindowsMethod);                //read from EEPROM (persistent memory of ATMEGA 32U4) to see whether it should use MultiLang method
-  if(LOG_SERIAL)
-  { 
+  
+  #ifdef LOG_SERIAL
     Serial.print("MultiLang method (Windows only) setting has been read from the EEPROM - ");
     if(useMultiLangWindowsMethod)
     {
@@ -263,7 +281,8 @@ void SavedMultiLangMethodWindowsCheck()                   // check whether the M
     {
       Serial.println("it's disabled.");
     }
-  }
+  #endif
+
 }
 
 void SavedEncodingAvailabilityCheck()                               //rewrites the default US encoding with the one which was used last time and saved to EEPROM
@@ -277,22 +296,25 @@ void SavedEncodingAvailabilityCheck()                               //rewrites t
       for(byte offset=0; offset<ENCODING_SIZE; offset++)
       {
         EEPROM.get(offset+1+(ENCODING_SIZE*i), Encoding[i][offset]);            //+1 because the 0 address holds trigger bool for tricky activation method
-        if(LOG_SAVED_ENCODING_EEPROM)
-        {
+        #ifdef LOG_SAVED_ENCODING_EEPROM
           Serial.print(Encoding[i][offset], HEX);
           Serial.print(",");
-        }
+        #endif
       }
 
-      if(LOG_SAVED_ENCODING_EEPROM){Serial.print("\n");}
+      #ifdef LOG_SAVED_ENCODING_EEPROM
+        Serial.print("\n");
+      #endif
     }
 
     EEPROM.get(EEPROM_STARTING_ADDRESS_ENCODING_NAME, encodingName);
   }
-  else if(LOG_SAVED_ENCODING_EEPROM)
+  else
   {
-    Serial.print("No encoding available");
-    Serial.print("\n");
+    #ifdef LOG_SAVED_ENCODING_EEPROM
+      Serial.print("No encoding available");
+      Serial.print("\n");
+    #endif
   }
 }
 
@@ -313,10 +335,10 @@ void ChangeBluetoothCheck(){
     
     App.print(at_cmd);
     
-    if(LOG_SERIAL){
+    #ifdef LOG_SERIAL
       Serial.println("Changed bluetooth name. Command used:");
       Serial.println(at_cmd);
-    }
+    #endif
     
     delay(1000);
     while(App.available() > 0){char c = App.read();}
@@ -335,10 +357,10 @@ void ChangeBluetoothCheck(){
     delay(700);
     App.print(at_pin_cmd);
 
-    if(LOG_SERIAL){
+    #ifdef LOG_SERIAL
       Serial.println("Changed bluetooth pin. Command used:");
       Serial.println(at_pin_cmd);
-    }
+    #endif
 
     //Serial.println("wtf");
     
@@ -365,7 +387,10 @@ void MyFuncMouseMove(char *inStr)
   if(inStr[3] == 'L'){x = x * -1;}
   if(inStr[5] == 'D'){y = y * -1;}       
 
-  if(LOG_SERIAL){Serial.print("    x="); Serial.print((byte)x);Serial.print(", y=");Serial.print((byte)y);Serial.print("\n");}
+  #ifdef LOG_SERIAL
+    Serial.print("    x="); Serial.print((byte)x);Serial.print(", y=");Serial.print((byte)y);Serial.print("\n");
+  #endif
+  
   Mouse.move(x, y, 0);
   
   for(byte i=0;i<strlen(inStr);i++){inStr[i]=0;}
@@ -601,12 +626,16 @@ void Check_Protocol(char *inStr)
         if(!strcmp(inStr,"Enabled")){
           useMultiLangWindowsMethod = true;
           EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, true);
-          if(LOG_SERIAL){Serial.println("MultiLang method (Windows only) has been enabled.");}
+          #ifdef LOG_SERIAL
+            Serial.println("MultiLang method (Windows only) has been enabled.");
+          #endif
         }
         else if(!strcmp(inStr,"Disabled")){
           useMultiLangWindowsMethod = false;
           EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, false);
-          if(LOG_SERIAL){Serial.println("MultiLang method (Windows only) has been disabled.");}
+          #ifdef LOG_SERIAL
+            Serial.println("MultiLang method (Windows only) has been disabled.");
+          #endif
         }
     }
       
@@ -912,7 +941,9 @@ bool IsModifier(char c)                   // is key like shift, alt, "GUI" key, 
   byte b = (byte)c;
   if((b >= 128 && b <=135) || (b >= 176 && b <=179) || (b >= 193 && b <=205) || (b >= 209 && b <=218))
   {
-    if(LOG_SERIAL){Serial.println("Is modifier");}
+    #ifdef LOG_SERIAL
+      Serial.println("Is modifier");
+    #endif
     return true;
   }
   return false;
@@ -983,7 +1014,9 @@ void SetNewCharEncoding(char *inStr){
 
   ExtractDeliveredText(inStr, 6);
   
-  if(LOG_SAVED_ENCODING_EEPROM){Serial.print("Received:\n");}
+  #ifdef LOG_SAVED_ENCODING_EEPROM
+    Serial.print("Received:\n");
+  #endif
 
   for(byte offset=0; offset<strlen(inStr); offset+=2)
   {
@@ -991,16 +1024,17 @@ void SetNewCharEncoding(char *inStr){
 
     Encoding[encodingFactor][offset/2] = (byte)strtoul((char*)strtok(strValBuff, " "),NULL,16);               //(((byte)inStr[offset]) * 16) + (byte)inStr[offset+1];         
 
-    if(LOG_SAVED_ENCODING_EEPROM)
-    {
+    #ifdef LOG_SAVED_ENCODING_EEPROM
       Serial.print(Encoding[encodingFactor][offset/2], HEX);
       Serial.print("-");
       Serial.print(offset);
       Serial.print("  ");       
-    }
+    #endif
   }  
   
-  if(LOG_SAVED_ENCODING_EEPROM){Serial.print("\nSaved to EEPROM:\n");}
+  #ifdef LOG_SAVED_ENCODING_EEPROM
+    Serial.print("\nSaved to EEPROM:\n");
+  #endif
 
   //save to EEPROM
   for(byte offset=0; offset<ENCODING_SIZE; offset++)
@@ -1008,14 +1042,14 @@ void SetNewCharEncoding(char *inStr){
     Encoding[encodingFactor][offset] = ((offset<(strlen(inStr)/2)) ? Encoding[encodingFactor][offset] : 0);
     EEPROM.put(offset+1+(ENCODING_SIZE*encodingFactor), Encoding[encodingFactor][offset]);                    //+1 because the 0 address holds trigger bool for tricky activation method
     
-    if(LOG_SAVED_ENCODING_EEPROM)
-    {
+    #ifdef LOG_SAVED_ENCODING_EEPROM
       Serial.print(Encoding[encodingFactor][offset], HEX);
       Serial.print(",");
-    }
+    #endif
   }
-  if(LOG_SAVED_ENCODING_EEPROM){Serial.print("\n\n");}
+  #ifdef LOG_SAVED_ENCODING_EEPROM
+    Serial.print("\n\n");
+  #endif
 }
-
 
 
