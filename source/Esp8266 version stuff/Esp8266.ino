@@ -62,7 +62,7 @@ ESP8266WebServer server(80);
 
 void setup() {  
   delay(1000);
-  Serial.begin(9600);
+  Serial.begin(115200);
   //Serial.println();
   //Serial.print("Configuring access point...");
   
@@ -203,12 +203,3 @@ void Read_AP_EEPROM_Creds(){
   } 
   EEPROM.end();
 }
-
-
-
-
-
-
-
-
-

