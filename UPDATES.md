@@ -1,3 +1,9 @@
+**24/07/2018**  
+-increased baud rate of Esp8266 version to 115200 (it's necessary to upload both: Esp8266 and Arduino code for the change to take place)  
+
+**23/07/2018**  
+-fixed critical bug (Bluetooth version froze the device if "LOG_SERIAL" was disabled)  
+
 **03/07/2018**  
 -added wi-fi Esp8266 module support as an alternative to HC-06 bluetooth module (user can control 2 devices simultaneously, 1 using bluetooth, 1 using wi-fi)  
 
