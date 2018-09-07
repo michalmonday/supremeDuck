@@ -28,8 +28,8 @@ Last edited: 24/07/2018
 #include <EEPROM.h>                               // Electrically Erasable Programmable Read-Only Memory, it allows to save some values that will prevail even when the device is disconnected from power.
    
 //#define WAIT_FOR_SERIAL_MONITOR_TO_OPEN 
-//#define LOG_SAVED_ENCODING_EEPROM                 // uncomment to disable
-//#define LOG_SERIAL                                // uncomment to disable
+//#define LOG_SAVED_ENCODING_EEPROM                 
+//#define LOG_SERIAL                            // serial logging may cause stability issues because of too much memory being used... (keep it disabled unless debugging)   
 
 /*
 #define EEPROM_ADDRESS_TRIGGER_TRICK 0
