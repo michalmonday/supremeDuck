@@ -611,7 +611,7 @@ void Check_Protocol(char *inStr)
         ExtractDeliveredText(inStr, 7);        
         int key_1;
         int key_2;
-        sscanf(inStr, "%*[^:]:%X,%X", &key_1, &key_2);        
+        sscanf(inStr, "%X,%X", &key_1, &key_2);   
         myKeyboard.press(key_1);
         delay(keypress_time);
         myKeyboard.press(key_2);
