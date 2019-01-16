@@ -1,3 +1,6 @@
+**16/01/2019 - 13:07**  
+Fixed what I messed up with last update... (ducky script not working properly)  
+
 **16/01/2019**  
 Fixed ducky script bug (e.g. "ALT TAB" not doing what it supposed to)  
   

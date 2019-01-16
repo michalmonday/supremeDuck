@@ -6,7 +6,7 @@ Last edited: 16/01/2019
 */
 
 
-#define APP_Version "1.07"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
+#define APP_Version "1.071"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
                                                       // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
 
 //#define WIFI_DUCKY_SETUP                             // uncomment if you're using "HC-06"
@@ -104,6 +104,16 @@ char commandLineObfuscationString[54] = "echo off & mode 20,1 & title svchost & 
 void SetNewCharEncoding(char *inStr);
 unsigned long last_alt_tab_time = 0;
 #define ALT_TAB_AUTORELEASE 1000
+
+/*
+Default delay info: https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Duckyscript
+"DEFAULT_DELAY or DEFAULTDELAY is used to define how long (milliseconds) to wait between each subsequent command. 
+DEFAULT_DELAY must be issued at the beginning of the ducky script and is optional. Not specifying the DEFAULT_DELAY will result in faster execution of ducky scripts. 
+This command is mostly useful when debugging."
+*/
+int default_delay = 0; 
+byte keypress_time = 5;
+
 
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {
@@ -553,6 +563,7 @@ void Check_Protocol(char *inStr)
     if(IsCmd(inStr, "PT:")){                     // plain text
         ExtractDeliveredText(inStr, 3);
         Print(inStr);
+        delay(default_delay);
     }
     
     if(IsCmd(inStr, "TE:")){                     //(direct text instruction but with enter at the end )    
@@ -588,48 +599,63 @@ void Check_Protocol(char *inStr)
         ExtractDeliveredText(inStr, 7);
         inStr[4] = 0;
         myKeyboard.press(HexToChar(inStr));
-        delay(5);
+        delay(keypress_time);
         //Print(inStr[3]);
         myKeyboard.press(inStr[3]);
-        delay(5);
+        delay(keypress_time);
         myKeyboard.releaseAll(); 
+        delay(default_delay);
     }
     
     if(IsCmd(inStr, "PDK_HH:")){                   // press double key ( when hex and hex values received)         
-        ExtractDeliveredText(inStr, 7);
-        /*
-        char key_1 = HexToChar(inStr);
-        char key_2 = HexToChar(inStr+2);
-        */
-        
+        ExtractDeliveredText(inStr, 7);        
         int key_1;
         int key_2;
-        sscanf(inStr, "%X,%X", &key_1, &key_2);        
+        sscanf(inStr, "%*[^:]:%X,%X", &key_1, &key_2);        
         myKeyboard.press(key_1);
-        delay(50);
+        delay(keypress_time);
         myKeyboard.press(key_2);
-        delay(50);
+        delay(keypress_time);
         myKeyboard.releaseAll();  
+        delay(default_delay);
     }
     
     if(IsCmd(inStr, "PK:")){                       // press key
         ExtractDeliveredText(inStr, 3);
         inStr[1] = 0;
         Print(inStr[0]);
+        delay(keypress_time);
+        delay(default_delay);
     }
     
     if(IsCmd(inStr, "PKH:")){                      // press key (when hex received)
         ExtractDeliveredText(inStr, 4);
         char key[2] = {HexToChar(inStr), '\0'};
-        Print(key);    
+        Print(key);  
+        delay(default_delay);  
     }
     
-    if(IsCmd(inStr, "WAIT:")){
-        ExtractDeliveredText(inStr, 5);
+    if(IsCmd(inStr, "DELAY:")){
+        //ExtractDeliveredText(inStr, 5);
         int val;
-        sscanf(inStr, "%i", &val);
+        sscanf(inStr, "%*[^:]:%d", &val);
         delay(val);    
+        delay(default_delay);
     }
+
+    if(IsCmd(inStr, "DEFAULTDELAY:") || IsCmd(inStr, "DEFAULT_DELAY:")){
+        sscanf(inStr, "%*[^:]:%d", &default_delay); 
+        delay(default_delay);
+    }
+
+    if(!strcmp(inStr, "ds_begin") || !strcmp(inStr, "ds_end")){ // when ducky script begins
+      default_delay = 0;      
+    }
+
+    // END OF DUCKY SCRIPT COMMANDS
+
+
+    
     
     if(IsCmd(inStr, "SW:") && StrContains(inStr, ",type:")){         //SW:t,type:est,end (download and set as a wallpaper)
         byte indexType = SubStrIndex(inStr, ",type:");                                                        //trying to get the position where link is ending and the file type begins
@@ -777,9 +803,9 @@ void Print(char *inStr)
       */
     
       myKeyboard.press(KEY_LEFT_ALT);
-      PressRelease((char)KEYPAD[hundreds], 5);
-      PressRelease((char)KEYPAD[dozens], 5);
-      PressRelease((char)KEYPAD[singles], 5);
+      PressRelease((char)KEYPAD[hundreds], default_delay);
+      PressRelease((char)KEYPAD[dozens], default_delay);
+      PressRelease((char)KEYPAD[singles], default_delay);
       myKeyboard.releaseAll();
       continue;
     }
@@ -790,11 +816,11 @@ void Print(char *inStr)
       if(Encoding[ENCODING_BYTE_MODIFIER][enc_index] > 0)
       {
         myKeyboard.press(Encoding[ENCODING_BYTE_MODIFIER][enc_index]);
-        delay(5);
+        delay(keypress_time);
       }
 
       myKeyboard.press(Encoding[ENCODING_BYTE_USED][enc_index]);
-      delay(5);     
+      delay(keypress_time);     
 
       /*
       Serial.print(inStr[i]);
@@ -814,7 +840,7 @@ void Print(char *inStr)
       myKeyboard.press(inStr[i]);
       //Serial.print(", ");
       //Serial.println(inStr[i]);
-      delay(5);     
+      delay(keypress_time);     
     }
     myKeyboard.releaseAll();
   }
