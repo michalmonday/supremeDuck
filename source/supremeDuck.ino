@@ -2,11 +2,11 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 24/07/2018
+Last edited: 16/01/2019
 */
 
 
-#define APP_Version "1.06"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
+#define APP_Version "1.07"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
                                                       // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
 
 //#define WIFI_DUCKY_SETUP                             // uncomment if you're using "HC-06"
@@ -28,8 +28,8 @@ Last edited: 24/07/2018
 #include <EEPROM.h>                               // Electrically Erasable Programmable Read-Only Memory, it allows to save some values that will prevail even when the device is disconnected from power.
    
 //#define WAIT_FOR_SERIAL_MONITOR_TO_OPEN 
-//#define LOG_SAVED_ENCODING_EEPROM                 
-//#define LOG_SERIAL                            // serial logging may cause stability issues because of too much memory being used... (keep it disabled unless debugging)   
+           
+//#define LOG_SERIAL                            
 
 /*
 #define EEPROM_ADDRESS_TRIGGER_TRICK 0
@@ -247,19 +247,6 @@ void Alt_Tab_Release_Routine(){
 void SavedMultiLangMethodWindowsCheck()                   // check whether the MultiLang method was used before the device turned off last time (access EEPROM by using function "EEPROM.get(address, my_var);")
 {
   EEPROM.get(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, useMultiLangWindowsMethod);                //read from EEPROM (persistent memory of ATMEGA 32U4) to see whether it should use MultiLang method
-  
-  #ifdef LOG_SERIAL
-    Serial.print("MultiLang method (Windows only) setting has been read from the EEPROM - ");
-    if(useMultiLangWindowsMethod)
-    {
-      Serial.println("it's enabled.");
-    }
-    else
-    {
-      Serial.println("it's disabled.");
-    }
-  #endif
-
 }
 
 void SavedEncodingAvailabilityCheck()                               //rewrites the default US encoding with the one which was used last time and saved to EEPROM
@@ -273,25 +260,15 @@ void SavedEncodingAvailabilityCheck()                               //rewrites t
       for(byte offset=0; offset<ENCODING_SIZE; offset++)
       {
         EEPROM.get(offset+1+(ENCODING_SIZE*i), Encoding[i][offset]);            //+1 because the 0 address holds trigger bool for tricky activation method
-        #ifdef LOG_SAVED_ENCODING_EEPROM
-          Serial.print(Encoding[i][offset], HEX);
-          Serial.print(",");
-        #endif
       }
 
-      #ifdef LOG_SAVED_ENCODING_EEPROM
-        Serial.print("\n");
-      #endif
     }
 
     EEPROM.get(EEPROM_STARTING_ADDRESS_ENCODING_NAME, encodingName);
   }
   else
   {
-    #ifdef LOG_SAVED_ENCODING_EEPROM
-      Serial.print("No encoding available");
-      Serial.print("\n");
-    #endif
+
   }
 }
 
@@ -312,10 +289,6 @@ void ChangeBluetoothCheck(){
     
     App.print(at_cmd);
     
-    #ifdef LOG_SERIAL
-      Serial.println("Changed bluetooth name. Command used:");
-      Serial.println(at_cmd);
-    #endif
     
     delay(1000);
     while(App.available() > 0){char c = App.read();}
@@ -334,10 +307,6 @@ void ChangeBluetoothCheck(){
     delay(700);
     App.print(at_pin_cmd);
 
-    #ifdef LOG_SERIAL
-      Serial.println("Changed bluetooth pin. Command used:");
-      Serial.println(at_pin_cmd);
-    #endif
 
     //Serial.println("wtf");
     
@@ -364,9 +333,6 @@ void MyFuncMouseMove(char *inStr)
   if(inStr[3] == 'L'){x = x * -1;}
   if(inStr[5] == 'D'){y = y * -1;}       
 
-  #ifdef LOG_SERIAL
-    Serial.print("    x="); Serial.print((byte)x);Serial.print(", y=");Serial.print((byte)y);Serial.print("\n");
-  #endif
   
   Mouse.move(x, y, 0);
   
@@ -603,16 +569,10 @@ void Check_Protocol(char *inStr)
         if(!strcmp(inStr,"Enabled")){
           useMultiLangWindowsMethod = true;
           EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, true);
-          #ifdef LOG_SERIAL
-            Serial.println("MultiLang method (Windows only) has been enabled.");
-          #endif
         }
         else if(!strcmp(inStr,"Disabled")){
           useMultiLangWindowsMethod = false;
           EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, false);
-          #ifdef LOG_SERIAL
-            Serial.println("MultiLang method (Windows only) has been disabled.");
-          #endif
         }
     }
       
@@ -637,13 +597,18 @@ void Check_Protocol(char *inStr)
     
     if(IsCmd(inStr, "PDK_HH:")){                   // press double key ( when hex and hex values received)         
         ExtractDeliveredText(inStr, 7);
+        /*
         char key_1 = HexToChar(inStr);
-        char key_2[2] = {HexToChar(inStr+2),"\0"}; 
+        char key_2 = HexToChar(inStr+2);
+        */
+        
+        int key_1;
+        int key_2;
+        sscanf(inStr, "%X,%X", &key_1, &key_2);        
         myKeyboard.press(key_1);
-        delay(5);
-        //Print(key_2);
+        delay(50);
         myKeyboard.press(key_2);
-        delay(5);
+        delay(50);
         myKeyboard.releaseAll();  
     }
     
@@ -918,9 +883,6 @@ bool IsModifier(char c)                   // is key like shift, alt, "GUI" key, 
   byte b = (byte)c;
   if((b >= 128 && b <=135) || (b >= 176 && b <=179) || (b >= 193 && b <=205) || (b >= 209 && b <=218))
   {
-    #ifdef LOG_SERIAL
-      Serial.println("Is modifier");
-    #endif
     return true;
   }
   return false;
@@ -991,9 +953,6 @@ void SetNewCharEncoding(char *inStr){
 
   ExtractDeliveredText(inStr, 6);
   
-  #ifdef LOG_SAVED_ENCODING_EEPROM
-    Serial.print("Received:\n");
-  #endif
 
   for(byte offset=0; offset<strlen(inStr); offset+=2)
   {
@@ -1001,17 +960,7 @@ void SetNewCharEncoding(char *inStr){
 
     Encoding[encodingFactor][offset/2] = (byte)strtoul((char*)strtok(strValBuff, " "),NULL,16);               //(((byte)inStr[offset]) * 16) + (byte)inStr[offset+1];         
 
-    #ifdef LOG_SAVED_ENCODING_EEPROM
-      Serial.print(Encoding[encodingFactor][offset/2], HEX);
-      Serial.print("-");
-      Serial.print(offset);
-      Serial.print("  ");       
-    #endif
   }  
-  
-  #ifdef LOG_SAVED_ENCODING_EEPROM
-    Serial.print("\nSaved to EEPROM:\n");
-  #endif
 
   //save to EEPROM
   for(byte offset=0; offset<ENCODING_SIZE; offset++)
@@ -1019,14 +968,5 @@ void SetNewCharEncoding(char *inStr){
     Encoding[encodingFactor][offset] = ((offset<(strlen(inStr)/2)) ? Encoding[encodingFactor][offset] : 0);
     EEPROM.put(offset+1+(ENCODING_SIZE*encodingFactor), Encoding[encodingFactor][offset]);                    //+1 because the 0 address holds trigger bool for tricky activation method
     
-    #ifdef LOG_SAVED_ENCODING_EEPROM
-      Serial.print(Encoding[encodingFactor][offset], HEX);
-      Serial.print(",");
-    #endif
   }
-  #ifdef LOG_SAVED_ENCODING_EEPROM
-    Serial.print("\n\n");
-  #endif
 }
-
-

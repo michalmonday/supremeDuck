@@ -1,3 +1,6 @@
+**16/01/2019**  
+Fixed ducky script bug (e.g. "ALT TAB" not doing what it supposed to)  
+  
 **24/07/2018**  
 -increased baud rate of Esp8266 version to 115200 (it's necessary to upload both: Esp8266 and Arduino code for the change to take place)  
 
