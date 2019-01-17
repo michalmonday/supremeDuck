@@ -6,7 +6,7 @@ Last edited: 16/01/2019
 */
 
 
-#define APP_Version "1.071"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
+#define APP_Version "1.072"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
                                                       // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
 
 //#define WIFI_DUCKY_SETUP                             // uncomment if you're using "HC-06"
