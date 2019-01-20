@@ -19,6 +19,8 @@ Plug it in to your friend's PC and by pressing a button on your android smartpho
 [Youtube video - functionality](https://www.youtube.com/watch?v=iL2pS2EvqkY&index=3&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)  
 [Youtube video - early version](https://www.youtube.com/watch?v=mwDT1gX9wzU&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2&index=1)  
 
+Preview feature allows to see what youtube video or website will be launched on the target PC.  
+![Preview-feature-gif](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/preview_option_for_youtube_and_websites.gif)  
 
 **Implementation details**  
 The Android application was made using "MIT App Inventor 2" and is open source (see source/supremeDuck.aia). Initially it was made with Arduino Pro Micro and HC-06 bluetooth module. Currently it can also be made and used with Esp8266 wi-fi module instead of HC-06 using the same hardware setup spacehuhn used [here](https://github.com/spacehuhn/wifi_ducky).  
