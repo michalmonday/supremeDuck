@@ -2,12 +2,13 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 16/01/2019
+Last edited: 20/01/2019
 */
 
-
-#define APP_Version "1.072"                            // it is used to compare it with the app version to make sure that both of them are the same (if they're not the same it will be shown in the mobile app and update will be suggested, first implemented in version 1.03 so it won't give any notice for earlier versions)
-                                                      // ATMEGA 32U4 which is the chip on Arduino Pro Micro has 1024 bytes of EEPROM.
+#define APP_Version "1.08"                            // It is used to compare it with the mobile app version.
+                                                      // For example: 1.08 is compatible with 1.081 or 1.83148, 
+                                                      // but it's not compatible with 1.09 or 1.091319 
+                                                      // (in such case notification will be displayed in the app)
 
 //#define WIFI_DUCKY_SETUP                             // uncomment if you're using "HC-06"
 
