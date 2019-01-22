@@ -1,4 +1,9 @@
-Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/master) for further updates. I'm trying to keep commit messages/titles to be descriptive so there's no point in rewriting the same in this file anymore.   
+Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/master) for further updates. I'm trying to keep commit messages/titles to be descriptive.  
+
+**22/01/2019**  
+-improved [encoding for different languages](https://github.com/michalmonday/supremeDuck/blob/master/resources/repository%20stuff/new%20encoding%20effectiveness.txt) (now more characters can be correctly typed when "MultiLang" method is off)  
+-decreased Arduino code memory (from 75% to 46%)  
+-added preview feature for "Youtube", "Website" and "Set wallpaper" categories  
 
 **16/01/2019 - 13:07**  
 Fixed what I messed up with last update... (ducky script not working properly)  
