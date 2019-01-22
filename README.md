@@ -22,8 +22,6 @@ Preview feature allows to see what youtube video or website will be launched on 
 [Review and presentation video](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2) thanks to:  
 [![image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/JackkTutorials.png)](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)
 
-[Review and presentation](https://www.youtube.com/watch?v=FsTeedpYeg4) by JackkTutorials  
-
 **Implementation details**  
 The Android application was made using "MIT App Inventor 2" and is open source (see source/supremeDuck.aia). Initially it was made with Arduino Pro Micro and HC-06 bluetooth module. Currently it can also be made and used with Esp8266 wi-fi module instead of HC-06 using the same hardware setup spacehuhn used [here](https://github.com/spacehuhn/wifi_ducky).  
 
