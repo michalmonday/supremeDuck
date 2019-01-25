@@ -14,8 +14,10 @@ pt: !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklm
 be: !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~
 dk: !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]&_abcdefghijklmnopqrstuvwxyz{|}~
 
-Testing method:
-1. Changed Windows 10 language setting.
-2. Changed supremeDuck encoding by picking it in "Settings" of the app and pressing "Test language encoding" (which additionally inputs all the ascii characters).  
+Testing method:  
+1. Opened notepad.  
+2. Changed Windows 10 language setting.  
+3. Changed supremeDuck encoding by picking it in "Settings" of the app and pressing "Test language encoding" (which additionally inputs all the ascii characters).  
+4. Observed what is being typed.  
 
 Tested on 22/01/2019 using updated encoding data.  
