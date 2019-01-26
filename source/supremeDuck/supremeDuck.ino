@@ -2,11 +2,11 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 22/01/2019
+Last edited: 26/01/2019
 */
 
 
-#define APP_Version "1.09"                            // It is used to compare it with the mobile app version.
+#define APP_Version "1.1"                            // It is used to compare it with the mobile app version.
                                                       // For example: 1.08 is compatible with 1.081 or 1.83148, 
                                                       // but it's not compatible with 1.09 or 1.091319 
                                                       // (in such case notification will be displayed in the app)
@@ -31,7 +31,7 @@ Last edited: 22/01/2019
    
 //#define WAIT_FOR_SERIAL_MONITOR_TO_OPEN 
            
-//#define LOG_SERIAL                            
+#define LOG_SERIAL                            
 
 /*
 #define EEPROM_ADDRESS_TRIGGER_TRICK 0
@@ -39,6 +39,7 @@ trick = plug it in + plug out within 3 secs => special function is triggered(tha
 */
                                                   
 
+#include "FingerprintUSBHost.h"                 // for recognizing operating system of the target PC (Windows, Linux, Mac)
 #include "Keyboard.h"                           // library which provides all the functions to emulate Human Interface Device
 #include "Mouse.h"                              // the same as above
 
@@ -118,6 +119,7 @@ This command is mostly useful when debugging."
 int default_delay = 0; 
 byte keypress_time = 5;
 
+String operating_system;
 
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {
@@ -190,7 +192,7 @@ void setup()                                    // setup function is a part of e
   HID().SendReport(2, &kr, sizeof(KeyReport));
 
 */
-
+  
 }
 
 
@@ -390,15 +392,17 @@ void EnterCommand(char *text)
 void Check_Protocol(char *inStr)
 {       
 
-    if(!strcmp(inStr, "Request_info\0")){
-      char data[40];
-      sprintf(data,"data=%i,%s,end", useMultiLangWindowsMethod,encodingName);           //format string
+    if(!strcmp(inStr, "Request_info")){
+      char data[70];
+      
+      FingerprintUSBHost.guessHostOS(operating_system);
+      sprintf(data,"data=%i,%s,%s,end", useMultiLangWindowsMethod, encodingName, operating_system.c_str());           //format string
       App.write(data); // send the data to the mobile app or any other bluetooth device that is connected to it right now     
-      //Serial.println(data);
-      memset(data, 0, 40);  
+      Serial.println(data);
+      memset(data, 0, 70);  
     }
-    
-    if(!strcmp(inStr, "Ctrl_alt_del\0")){
+
+    if(!strcmp(inStr, "Ctrl_alt_del")){
       Keyboard.releaseAll();
       delay(20);
       Keyboard.press(KEY_LEFT_CTRL);
@@ -410,7 +414,7 @@ void Check_Protocol(char *inStr)
       Keyboard.releaseAll();
     }
 
-    if(!strcmp(inStr, "Right_click\0")){
+    if(!strcmp(inStr, "Right_click")){
       Mouse.click(MOUSE_RIGHT);
     }
 
@@ -510,9 +514,14 @@ void Check_Protocol(char *inStr)
     if(!strcmp(inStr, "VER")){                            // if the mobile phone app asks what version of the code is used on Arduino, to make sure that the same it's not different from the mobile app
         char data[13];
         sprintf(data,"ver=%s,end", APP_Version);          //format string
-        App.write(data);                         // send the data to the mobile app or any other bluetooth device that is connected to it right now
-        for(byte i=0;i<13;i++){data[i]=0;}            //reset "data" (idk if it's even necessary)
+        App.write(data);                                  // send the data to the mobile app or any other bluetooth device that is connected to it right now
+        memset(data, 0, 13);                              //reset "data" (idk if it's even necessary)
     }
+
+
+
+    
+  
 
     /* NOT NEEDED ANYMORE :)
     if(IsCmd(inStr, "YT:")){                       //YT:t,end (Youtube)

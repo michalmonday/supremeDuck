@@ -1,4 +1,10 @@
-Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/master) for further updates. I'm trying to keep commit messages/titles to be descriptive.  
+Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/master) for further updates. I'm trying to keep commit messages/titles to be descriptive. 
+
+**26/01/2019**  
+-OS detection  
+-adapted functions to work with Linux and macOS  
+-added "delay after opening terminal" setting  
+-minor app improvements / bug fixes  
 
 **22/01/2019**  
 -improved [encoding for different languages](https://github.com/michalmonday/supremeDuck/blob/master/resources/repository%20stuff/new%20encoding%20effectiveness.txt) (now more characters can be correctly typed when "MultiLang" method is off)  
