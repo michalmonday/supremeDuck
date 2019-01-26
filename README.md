@@ -37,7 +37,7 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 
 
 ## Is it going to work on any PC and work instantly?  
-It was tested and working well straight after pluggin-in with **Windows 10** :heavy_check_mark:, **Windows 8** :heavy_check_mark:, **Lubuntu 18.10** :heavy_check_mark:, **Ubuntu 18.04** :heavy_check_mark:.  
+It was tested and working well with **Windows 10** :heavy_check_mark:, **Windows 8** :heavy_check_mark:, **Lubuntu 18.10** :heavy_check_mark:, **Ubuntu 18.04** :heavy_check_mark:, straight after pluggin-in.  
 On **macOS 10.12**:zap: it prompted the user to setup the keyboard, after that it worked well, see [macOS setup](https://github.com/michalmonday/supremeDuck/wiki/macOS-setup) for details.  
 It is problematic on **Windows 7**:zap: (driver installation popup takes long time and sometimes requires replugging device, after that it usually works). 
 
