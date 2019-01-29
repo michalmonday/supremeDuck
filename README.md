@@ -60,7 +60,8 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 :star: [Seytonic](https://maltronics.com/) - in a series of [youtube tutorials](https://www.youtube.com/watch?v=_yJWwKO3_Z0) presented how to use cheap Arduino Pro Micro as "Rubber ducky". It's worth to mention that :star: [Samy Kamkar](https://samy.pl) also presented this kind of functionality [with Teensy](https://www.youtube.com/watch?v=aSLEq7-hlmo) in 2014.  
 :star: Dejan from howtomechatronics.com - thanks for the tutorials about using Arduino with [bluetooth module](https://howtomechatronics.com/tutorials/arduino/arduino-and-hc-05-bluetooth-module-tutorial/) and [App inventor](https://howtomechatronics.com/tutorials/arduino/how-to-build-custom-android-app-for-your-arduino-project-using-mit-app-inventor/).  
 :star: Mr [Jesse Vincent](https://shop.keyboard.io/pages/about-us) who created [FingerprintUSBHost](https://github.com/keyboardio/FingerprintUSBHost) which allows to recognize operating system of the target machine. Noteworthy is that :star: [gloglas](https://github.com/gloglas) used it in [WifiDuckV2](https://github.com/gloglas/WifiDuckV2) (giving me idea to use it too) which is rewrite of :star: [spacehuhns](https://github.com/spacehuhn)'s [wifi_ducky](https://github.com/spacehuhn/wifi_ducky).  
-:star: [JackkTutorials](https://www.youtube.com/user/JackkTutorials/videos) - for presenting this project in a video.  
+:star: [JackkTutorials](https://www.youtube.com/user/JackkTutorials/videos) - thanks for presenting this project in a video.  
+:star: [Taifun](https://puravidaapps.com/index.php) - thanks for great App Inventor resources and [extensions](https://puravidaapps.com/extensions.php), this project is using few of them.   
 
 
 ## Future  
