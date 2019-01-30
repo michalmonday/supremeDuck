@@ -45,6 +45,7 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 
 
 ## Resources  
+- [Application](https://play.google.com/store/apps/details?id=appinventor.ai_michalmonday17.supremeDuck) - Google Play Store  
 - [DIY guide - bluetooth version](https://github.com/michalmonday/supremeDuck/wiki/DIY-Tutorial)  
 ![bluetooth version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/bluetooth_small_img.png)  
 - [DIY guide - wifi version](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wifi-based-version-(Esp8266) )  
