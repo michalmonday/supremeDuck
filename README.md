@@ -58,7 +58,7 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 
 
 ## Credits / thanks to / kudos  
-:star: [HAK5](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Downloads#duck-encoder) and :star: [mame82](https://github.com/mame82/duckencoder.py) - encoding for diffent languages used in this project is in 99% based on their work.  
+:star: [HAK5](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Downloads#duck-encoder) and :star: [mame82](https://github.com/mame82/duckencoder.py) - encoding for different languages used in this project is in 99% based on their work.  
 :star: [Seytonic](https://maltronics.com/) - in a series of [youtube tutorials](https://www.youtube.com/watch?v=_yJWwKO3_Z0) presented how to use cheap Arduino Pro Micro as "Rubber ducky". It's worth to mention that :star: [Samy Kamkar](https://samy.pl) also presented this kind of functionality [with Teensy](https://www.youtube.com/watch?v=aSLEq7-hlmo) in 2014.  
 :star: Dejan from howtomechatronics.com - thanks for the tutorials about using Arduino with [bluetooth module](https://howtomechatronics.com/tutorials/arduino/arduino-and-hc-05-bluetooth-module-tutorial/) and [App inventor](https://howtomechatronics.com/tutorials/arduino/how-to-build-custom-android-app-for-your-arduino-project-using-mit-app-inventor/).  
 :star: Mr [Jesse Vincent](https://shop.keyboard.io/pages/about-us) who created [FingerprintUSBHost](https://github.com/keyboardio/FingerprintUSBHost) which allows to recognize operating system of the target machine. Noteworthy is that :star: [gloglas](https://github.com/gloglas) used it in [WifiDuckV2](https://github.com/gloglas/WifiDuckV2) (giving me idea to use it too) which is rewrite of :star: [spacehuhns](https://github.com/spacehuhn)'s [wifi_ducky](https://github.com/spacehuhn/wifi_ducky).  
@@ -71,4 +71,4 @@ According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/ev
 
 
 ## More images  
-[Pics](https://github.com/michalmonday/supremeDuck/tree/master/resources/repository%20stuff/random_images)  
+[Pics](https://github.com/michalmonday/supremeDuck/tree/master/resources/repository%20stuff/random_images/images.md)  
