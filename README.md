@@ -10,8 +10,9 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 * :tv: play a youtube video  
 * :capital_abcd: type pre-defined text of your choice  
 * :open_file_folder: download and execute file  
+* :squirrel: [exfiltrate files](https://www.youtube.com/watch?v=TBBT1c2zjms) to Dropbox and Gmail  
 * :diamond_shape_with_a_dot_inside: move mouse cursor  
-* and [much more](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads)
+* and [much more](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads)  
 
 
 ## Notable features  
@@ -58,7 +59,7 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 
 
 ## Credits / thanks to / kudos  
-:star: [HAK5](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Downloads#duck-encoder) and :star: [mame82](https://github.com/mame82/duckencoder.py) - encoding for different languages used in this project is in 99% based on their work.  
+:star: [HAK5](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Downloads#duck-encoder) and :star: [mame82](https://github.com/mame82/duckencoder.py) - encoding for different languages used in this project is in 99% based on their work. This project was created thanks to the long chain of people building on top of other people's ideas. If HAK5 did not popularize HID attacks with Rubber Ducky then most of projects like this would not exist. Thanks to :star: authors of ducky scripts posted on [HAK5Darren's page with payloads](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads) this project is richer in features. Thanks to :star: Darren Kitchen for [Dropbox Exfiltration](https://www.youtube.com/watch?v=TBBT1c2zjms) and similar videos that all contributed in one way or another to this project.  
 :star: [Seytonic](https://maltronics.com/) - in a series of [youtube tutorials](https://www.youtube.com/watch?v=_yJWwKO3_Z0) presented how to use cheap Arduino Pro Micro as "Rubber ducky". It's worth to mention that :star: [Samy Kamkar](https://samy.pl) also presented this kind of functionality [with Teensy](https://www.youtube.com/watch?v=aSLEq7-hlmo) in 2014.  
 :star: Dejan from howtomechatronics.com - thanks for the tutorials about using Arduino with [bluetooth module](https://howtomechatronics.com/tutorials/arduino/arduino-and-hc-05-bluetooth-module-tutorial/) and [App inventor](https://howtomechatronics.com/tutorials/arduino/how-to-build-custom-android-app-for-your-arduino-project-using-mit-app-inventor/).  
 :star: Mr [Jesse Vincent](https://shop.keyboard.io/pages/about-us) who created [FingerprintUSBHost](https://github.com/keyboardio/FingerprintUSBHost) which allows to recognize operating system of the target machine. Noteworthy is that :star: [gloglas](https://github.com/gloglas) used it in [WifiDuckV2](https://github.com/gloglas/WifiDuckV2) (giving me idea to use it too) which is rewrite of :star: [spacehuhns](https://github.com/spacehuhn)'s [wifi_ducky](https://github.com/spacehuhn/wifi_ducky).  

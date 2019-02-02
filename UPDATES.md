@@ -1,5 +1,9 @@
 Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/master) for further updates. I'm trying to keep commit messages/titles to be descriptive. 
 
+**02/02/2019**  
+-Files exfiltration using [Dropbox](https://www.youtube.com/watch?v=TBBT1c2zjms) and Gmail  
+-fixed minor bug ("Text input is empty" message after running ducky script)  
+
 **26/01/2019**  
 -OS detection  
 -adapted functions to work with Linux and macOS  
