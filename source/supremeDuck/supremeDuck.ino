@@ -121,8 +121,13 @@ byte keypress_time = 5;
 
 String operating_system;
 
+unsigned long last_led_activity = 0;
+#define LED_SHOW_ACTIVITY_TIME 100
+
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
   App.begin(MODULE_BAUDRATE);                  // begin communication with the bluetooth module
   //Keyboard.begin();                           // begin emulating keyboard
   Keyboard.begin();
@@ -192,12 +197,15 @@ void setup()                                    // setup function is a part of e
   HID().SendReport(2, &kr, sizeof(KeyReport));
 
 */
-  
+  delay(100); 
+  digitalWrite(LED_BUILTIN, LOW);  
 }
 
 
 void loop()                                   // loop function is also a part of every Arduino sketch but gets called over again after it returns/finishes unlike "setup" function
 { 
+  LED_control();
+  
   byte i=0; 
   if (App.available() > 0)               // check whether there's any data received by the bluetooth module
   {        
@@ -214,7 +222,7 @@ void loop()                                   // loop function is also a part of
               #ifdef LOG_SERIAL
                 Serial.println(inSerial);
               #endif
-              
+              LED_show_activity();
               inSerial[i]='\0'; MyFuncMouseMove(inSerial);i = 0;
             }     //MM:L,U,3,1,end (mouse movement)}
         }
@@ -227,7 +235,8 @@ void loop()                                   // loop function is also a part of
       Serial.write(inSerial);             //it's useful for checking what text arduino receives from android but it makes the mouse movement laggy if the serial monitor is closed
       Serial.write("\n");  
     #endif
-                                    
+
+    LED_show_activity();                     
     Check_Protocol(inSerial);                           // main checking function, all the functionality gets triggered there depending on what it received from the bluetooth module      
     App.print("OK");                               // it wasn't necessary before, but the ducky script functionality requires the Arduino to say: "OK, I already typed the last line/key you've sent me, so you can send the next one", otherwise there would have to be a bigger delay   
     lastOKsendingTime = millis();
@@ -250,7 +259,20 @@ void loop()                                   // loop function is also a part of
   */
 
   Alt_Tab_Release_Routine();
-} 
+}
+
+void LED_control(){
+  if(digitalRead(LED_BUILTIN)){
+    if(last_led_activity - millis() > LED_SHOW_ACTIVITY_TIME){
+      digitalWrite(LED_BUILTIN, LOW);
+    } 
+  }
+}
+
+void LED_show_activity(){
+  digitalWrite(LED_BUILTIN, HIGH);
+  last_led_activity = millis();
+}
 
 void Alt_Tab_Release_Routine(){
   if(last_alt_tab_time > 0){
