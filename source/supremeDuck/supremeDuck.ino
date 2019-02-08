@@ -2,7 +2,7 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 26/01/2019
+Last edited: 08/02/2019
 */
 
 
@@ -124,8 +124,20 @@ String operating_system;
 unsigned long last_led_activity = 0;
 #define LED_SHOW_ACTIVITY_TIME 100
 
+#define WIFI_DUCKY_PROGRAMMING_MODE_SWITCH_PIN 3 // 3 of Arduino Pro Micro, SCL, PD0 (18 of Atmega32u4)
+/*
+Thanks to this switch it will be possible to flash the Esp8266 without the need to upload this code:
+https://gist.github.com/spacehuhn/b2b7d897550bc07b26da8464fa7f4b36
+
+It is incorporated into supremeDuck.ino instead and is activated when the switch is turned on = less hassle with reprogramming Esp
+ */
+#define WIFI_DUCKY_GPIO_0_CONTROL_PIN 2 // 2 of Arduino Pro Micro, SDA, PD1 (19 of Atmega32u4)
+#define WIFI_DUCKY_ENABLE_CONTROL_PIN 20 // 20 of Arduino Pro Micro, A2, PF5 (38 of Atmega32u4)
+
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {
+  Wifi_ducky_programming_mode();
+  
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
   App.begin(MODULE_BAUDRATE);                  // begin communication with the bluetooth module
@@ -199,6 +211,43 @@ void setup()                                    // setup function is a part of e
 */
   delay(100); 
   digitalWrite(LED_BUILTIN, LOW);  
+}
+
+void Wifi_ducky_programming_mode(){
+  #ifdef WIFI_DUCKY_SETUP
+  pinMode(WIFI_DUCKY_PROGRAMMING_MODE_SWITCH_PIN, INPUT_PULLUP);
+
+  pinMode(WIFI_DUCKY_GPIO_0_CONTROL_PIN, OUTPUT);
+  pinMode(WIFI_DUCKY_ENABLE_CONTROL_PIN, OUTPUT);
+
+  if(digitalRead(WIFI_DUCKY_PROGRAMMING_MODE_SWITCH_PIN) == LOW){
+    // If switch was activated then pass all data through Serial1 and allow programming Esp8266 with "Nodemcu Flasher" program.
+    Serial1.begin(115200);
+    Serial.begin(115200);
+    digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,LOW);
+    digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
+
+    /* Flash LED 3 times quickly to show that the constant loop was reached and the Esp8266 can be programmed.
+      Device is unusable in this mode (this mode is for flashing esp only) and has to be replugged in order to work again (plugged out + switch turned the other side + plugged back in) */
+    digitalWrite(LED_BUILTIN, HIGH); delay(300); digitalWrite(LED_BUILTIN, LOW); delay(300); digitalWrite(LED_BUILTIN, HIGH); delay(300); digitalWrite(LED_BUILTIN, LOW); delay(300); digitalWrite(LED_BUILTIN, HIGH); delay(300); digitalWrite(LED_BUILTIN, LOW);
+
+    while(true){
+        while(Serial1.available()){
+          Serial.write((uint8_t)Serial1.read());
+        }
+      
+        if(Serial.available()){
+          while(Serial.available()){
+            Serial1.write((uint8_t)Serial.read());
+          }
+        }
+    }
+  }else{
+    digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,HIGH);
+    digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
+  }
+
+  #endif
 }
 
 
