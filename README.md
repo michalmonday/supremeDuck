@@ -75,7 +75,7 @@ The current state of the Esp8266 based board can be already checked at:
 https://easyeda.com/michalmonday17/supremeduck_wifi  
 I just have to wait till the revised version arrives and make sure it works. Here's a preview of the first version that turned out working in the end but had few imperfections.  
 
-![wifi first preview image](https://github.com/michalmonday/supremeDuck/tree/master/resources/repository%20stuff/PCBs/first_version_preview.jpg)  
+![wifi first preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/first_version_preview.jpg)  
 
 I'd like to keep the BLE version project private until I get a chance to play with the modules and make sure that they will work as expected.  
 
