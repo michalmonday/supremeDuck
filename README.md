@@ -79,7 +79,7 @@ I just have to wait till the revised version arrives and make sure it works. Her
 
 I'd like to keep the BLE version project private until I get a chance to play with the modules and make sure that they will work as expected.  
 
-I'm planning to create additional tutorial for the process of making these. I used to be "scared" of schematics, soldering very small components and idea of designing PCB, it turns out that it can be fun and does not require some very expensive equipment. I'll try to list all the steps and resources once I complete the boards, however it takes time because waiting for parts takes long time...   
+I'm planning to create additional tutorial for the process of making these (I started the [Esp8266-based one](https://github.com/michalmonday/supremeDuck/wiki/Making-Esp8266-based-PCB)). I used to be "scared" of schematics, soldering very small components and idea of designing PCB, it turns out that it can be fun and does not require some very expensive equipment. I'll try to list all the steps and resources once I complete the boards, however it takes time because waiting for parts takes long time...   
 
 ## More images  
 [Pics](https://github.com/michalmonday/supremeDuck/tree/master/resources/repository%20stuff/random_images/images.md)  
