@@ -70,6 +70,16 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 ## Future  
 According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/evan/2018/09/mit.html) it will be possible to run application made using App Inventor on iOS soon (first quarter of 2019) which means that the supremeDuck application will not be limited to Android only. The progress of their work can be checked at: http://doesappinventorrunonios.com/  
 
+I'm designing 2 PCBs for it. Both will have a very similar components to CJMCU Beetle / Malduino / Arduino Pro Micro. 1 of them will allow easy soldering Esp-12F to the back of it, another one will most likely allow soldering JDY-08 or JDY-10 BLE modules to the back of it. I'm planning to fully share the source files so anyone can check, improve, produce or sell them.  
+The current state of the Esp8266 based board can be already checked at:  
+https://easyeda.com/michalmonday17/supremeduck_wifi  
+I just have to wait till the revised version arrives and make sure it works. Here's a preview of the first version that turned out working in the end but had few imperfections.  
+
+![wifi first preview image](https://github.com/michalmonday/supremeDuck/tree/master/resources/repository%20stuff/PCBs/first_version_preview.jpg)  
+
+I'd like to keep the BLE version project private until I get a chance to play with the modules and make sure that they will work as expected.  
+
+I'm planning to create additional tutorial for the process of making these. I used to be "scared" of schematics, soldering very small components and idea of designing PCB, it turns out that it can be fun and does not require some very expensive equipment. I'll try to list all the steps and resources once I complete the boards, however it takes time because waiting for parts takes long time...   
 
 ## More images  
 [Pics](https://github.com/michalmonday/supremeDuck/tree/master/resources/repository%20stuff/random_images/images.md)  
