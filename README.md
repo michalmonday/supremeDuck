@@ -28,7 +28,7 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 | Belgian | Brazilian | Canadian | Switzerland | Czech | German |
 | Dannish | Spannish | Finnish | French | UK | Croatian |
 | Italian | Norwegian | Portuguese | Slovenian | El Salvador | US |
-> You can see how reliable is each of the settings [here](https://github.com/michalmonday/supremeDuck/wiki/Encoding-effectiveness)  
+> You can see how reliable are some of these settings [here](https://github.com/michalmonday/supremeDuck/wiki/Encoding-effectiveness)  
 * "Live text execution" checkbox  
 <img src="https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/live_text.png" height="100">  
 
@@ -75,11 +75,24 @@ The current state of the Esp8266 based board can be already checked at:
 https://easyeda.com/michalmonday17/supremeduck_wifi  
 I just have to wait till the revised version arrives and make sure it works. Here's a preview of the first version that turned out working in the end but had few imperfections.  
 
-![wifi first preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/first_version_preview.jpg)  
+![wifi first preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/Wifi/first_version_preview.jpg)  
 
 I'd like to keep the BLE version project private until I get a chance to play with the modules and make sure that they will work as expected.  
 
 I'm planning to create additional tutorial for the process of making these (I started the [Esp8266-based one](https://github.com/michalmonday/supremeDuck/wiki/Making-Esp8266-based-PCB)). I used to be "scared" of schematics, soldering very small components and idea of designing PCB, it turns out that it can be fun and does not require some very expensive equipment. I'll try to list all the steps and resources once I complete the boards, however it takes time because waiting for parts takes long time...   
+
+
+## Similar projects  
+[Offensive MG Cables (O.MG)](http://mg.lol/blog/omg-cable/) - the smallest of all publicly available wireless HID devices (based on [espusb](https://github.com/cnlohr/espusb)), resembles NSA tools with its' compactness.  
+[wifi_ducky](https://github.com/spacehuhn/wifi_ducky) - very similar project to this but using browser instead of application.  
+[Modified wifi_ducky versions](https://github.com/spacehuhn/wifi_ducky/pull/94) - 4 different implementations.  
+[ESPloitV2](https://github.com/exploitagency/ESPloitV2) - similar to wifi_ducky but has built-in exfiltration/phishing methods (browser based).  
+[WiDucky](https://github.com/basic4/WiDucky) - similar to wifi_ducky but has various ways of controlling it (Python, Windows program, Android app).  
+[WHID](https://github.com/whid-injector/WHID) - cheap board that can be used with various projects (e.g. wifi_ducky, ESPloitV2, supremeDuck).  
+[WHID_elite](https://github.com/whid-injector/whid-elite) - SMS based HID with neat exfiltration method, mousejacking and other features.  
+[Bluetooth Rubber Duck](https://hackaday.io/project/27533-bluetooth-rubber-duck) - Digispark + HC-06 + application wireless HID.  
+[The Darkwing Duck](https://www.youtube.com/watch?v=oh7TcU3XbuQ) - Pro Micro + HC-06 + App inventor application wireless HID.  
+
 
 ## More images  
 [Pics](https://github.com/michalmonday/supremeDuck/tree/master/resources/repository%20stuff/random_images/images.md)  
