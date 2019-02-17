@@ -1,5 +1,5 @@
-Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/master) for further updates. I'm trying to keep commit messages/titles to be descriptive. 
-**17/02/2019**  
+Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/master) for further updates. I'm trying to keep commit messages/titles to be descriptive.   
+**17/02/2019**   
 -Added BLE support (modules like JDY-08 can be used)  
 
 **02/02/2019**  
