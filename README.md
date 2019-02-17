@@ -58,25 +58,6 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 - [Assembling service](http://prankingdevice.co.uk)  
 
 
-## Future  
-According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/evan/2018/09/mit.html) it will be possible to run application made using App Inventor on iOS soon (first quarter of 2019) which means that the supremeDuck application will not be limited to Android only. The progress of their work can be checked at: http://doesappinventorrunonios.com/  
-
-I'm designing 2 PCBs for it. Both will have a very similar components to CJMCU Beetle / Malduino / Arduino Pro Micro. 1 of them will allow easy soldering Esp-12F to the back of it, another one will most likely allow soldering JDY-08, JDY-10 or JDY-06 BLE modules to the back of it. I'm planning to fully share the source files so anyone can check, improve, produce or sell them.  
-The current state of the **Esp-12F** based board can be checked at:  
-https://easyeda.com/michalmonday17/supremeduck_wifi   
-![Esp-12F easyeda preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/Wifi/easyeda_design.png)  
-I just have to wait till the revised version arrives and make sure it works. Here's a preview of the first version that turned out working in the end but had few imperfections.  
-
-![wifi first preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/Wifi/first_version_preview.jpg)  
-
-The state of **JDY-08** (BLE) based board can be checked at:  
-https://easyeda.com/michalmonday17/supremeduck_jdy-08  
-![JDY-08 easyeda preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/BLE/easyeda_design.png)  
-I tested the module using this wiring and it worked well, the board design was not tested yet, I am waiting for it to arrive.  
-
-I'm planning to create additional tutorial for the process of making these (I started the [Esp8266-based one](https://github.com/michalmonday/supremeDuck/wiki/Making-Esp8266-based-PCB)). I used to be "scared" of schematics, soldering very small components and idea of designing PCB, it turns out that it can be fun and does not require some very expensive equipment. I'll try to list all the steps and resources once I complete the boards, however it takes time because waiting for parts takes long time...   
-
-
 ## Credits / thanks to / kudos  
 :star: [HAK5](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Downloads#duck-encoder) and :star: [mame82](https://github.com/mame82/duckencoder.py) - encoding for different languages used in this project is in 99% based on their work. This project was created thanks to the long chain of people building on top of other people's ideas. If HAK5 did not popularize HID attacks with Rubber Ducky then most of projects like this would not exist. Thanks to :star: authors of ducky scripts posted on [HAK5Darren's page with payloads](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads) this project is richer in features. Thanks to :star: Darren Kitchen for [Dropbox Exfiltration](https://www.youtube.com/watch?v=TBBT1c2zjms) and similar videos that all contributed in one way or another to this project.  
 :star: [Seytonic](https://maltronics.com/) - in a series of [youtube tutorials](https://www.youtube.com/watch?v=_yJWwKO3_Z0) presented how to use cheap Arduino Pro Micro as "Rubber ducky". It's worth to mention that :star: [Samy Kamkar](https://samy.pl) also presented this kind of functionality [with Teensy](https://www.youtube.com/watch?v=aSLEq7-hlmo) in 2014.  
@@ -84,6 +65,21 @@ I'm planning to create additional tutorial for the process of making these (I st
 :star: Mr [Jesse Vincent](https://shop.keyboard.io/pages/about-us) who created [FingerprintUSBHost](https://github.com/keyboardio/FingerprintUSBHost) which allows to recognize operating system of the target machine. Noteworthy is that :star: [gloglas](https://github.com/gloglas) used it in [WifiDuckV2](https://github.com/gloglas/WifiDuckV2) (giving me idea to use it too) which is rewrite of :star: [spacehuhns](https://github.com/spacehuhn)'s [wifi_ducky](https://github.com/spacehuhn/wifi_ducky).  
 :star: [JackkTutorials](https://www.youtube.com/user/JackkTutorials/videos) - thanks for presenting this project in a video.  
 :star: [Taifun](https://puravidaapps.com/index.php) - thanks for great App Inventor resources and [extensions](https://puravidaapps.com/extensions.php), this project is using few of them.   
+
+
+## Future  
+According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/evan/2018/09/mit.html) it will be possible to run application made using App Inventor on iOS soon (first quarter of 2019) which means that the supremeDuck application will not be limited to Android only. The progress of their work can be checked at: http://doesappinventorrunonios.com/  
+
+I'm designing 2 PCBs for it. Both will have a very similar components to CJMCU Beetle / Malduino / Arduino Pro Micro. 1 of them will allow easy soldering Esp-12F to the back of it, another one will most likely allow soldering JDY-08 or JDY-10 BLE modules to the back of it. I'm planning to fully share the source files so anyone can check, improve, produce or sell them.  
+The current state of the Esp8266 based board can be already checked at:  
+https://easyeda.com/michalmonday17/supremeduck_wifi  
+I just have to wait till the revised version arrives and make sure it works. Here's a preview of the first version that turned out working in the end but had few imperfections.  
+
+![wifi first preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/Wifi/first_version_preview.jpg)  
+
+I'd like to keep the BLE version project private until I get a chance to play with the modules and make sure that they will work as expected.  
+
+I'm planning to create additional tutorial for the process of making these (I started the [Esp8266-based one](https://github.com/michalmonday/supremeDuck/wiki/Making-Esp8266-based-PCB)). I used to be "scared" of schematics, soldering very small components and idea of designing PCB, it turns out that it can be fun and does not require some very expensive equipment. I'll try to list all the steps and resources once I complete the boards, however it takes time because waiting for parts takes long time...   
 
 
 ## Similar projects  

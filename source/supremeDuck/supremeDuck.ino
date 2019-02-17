@@ -2,27 +2,18 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 17/02/2019
+Last edited: 08/02/2019
 */
 
 
-#define APP_Version "1.2"                            // It is used to compare it with the mobile app version.
-                                                     // For example: 1.08 is compatible with 1.081 or 1.83148, 
-                                                     // but it's not compatible with 1.09 or 1.091319 
-                                                     // (in such case notification will be displayed in the app)
+#define APP_Version "1.1"                            // It is used to compare it with the mobile app version.
+                                                      // For example: 1.08 is compatible with 1.081 or 1.83148, 
+                                                      // but it's not compatible with 1.09 or 1.091319 
+                                                      // (in such case notification will be displayed in the app)
 
-                                                         
 //#define WIFI_DUCKY_SETUP                             // uncomment if you're using "Esp8266" (e.g. the same hardware/wiring as wifi_ducky)
-//#define JDY_08_SETUP                                 // uncomment if you're using JDY-08 (BLE module) based version, JDY-08 (BLE) module 
-                                                     // uses "AT+PASS" and 6 digits for setting pin (instead of "AT+PIN" and 4 digits like HC-06)
-                                                     // and requires "AT+ISCEN1" to activate pairing password at all (password for pairing is 
-                                                     // disabled by default because it's problematic)
 
-#if defined (WIFI_DUCKY_SETUP) && defined (JDY_08_SETUP)
-  #error "WIFI_DUCKY_SETUP or JDY_08_SETUP can't be defined at the same time, comment-out the one that should not be used."
-#endif
-
-#if defined (WIFI_DUCKY_SETUP) || defined (JDY_08_SETUP)
+#ifdef WIFI_DUCKY_SETUP
   #define USE_TX_RX_PINS                             //  TX/RX pins of pro micro instead of 9/8 pins and software serial library 
   #define MODULE_BAUDRATE 115200                     // use higher baudrate for Esp8266 (better speed for plain text/ducky scripts) 
 #else
@@ -84,26 +75,17 @@ byte Encoding[3][ENCODING_SIZE] = {
   301 - use multilang
   302-332 - encoding name
   333-363 - bluetooth name
-  364-369 - bluetooth pin (4 digits)
-  370-400 - BLE name
-  401-408 - BLE pin (6 digits)
+  364-369 - bluetooth pin
 
-  1000 - requested BLE name change
-  1004 - requested BLE pin change
   1008 - requested name change (after reboot, can't be bool, has to be some random pre-defined int)
   1012 - requested pin change
  */
 
-#define EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE 1000
-#define EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE 1004
 #define EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE 1008
 #define EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE 1012
 #define EEPROM_ADDRESS_BLUETOOTH_NAME 333
 #define BLUETOOTH_NAME_SIZE 30
 #define EEPROM_ADDRESS_BLUETOOTH_PIN 364
-#define EEPROM_ADDRESS_BLE_NAME 370
-#define EEPROM_ADDRESS_BLE_PIN 401
-#define BLE_NAME_SIZE 30
 
 #define EEPROM_ADDRESS_ENCODING_AVAILABLE 1016                  // address at which "778" will be written when the device will receive its first instruction to use some other encoding than the default US (this way I'll know to load EEPROM instead of using default US after re-boot)
 #define EEPROM_STARTING_ADDRESS_ENCODING_DESIRED 1 
@@ -142,21 +124,19 @@ String operating_system;
 unsigned long last_led_activity = 0;
 #define LED_SHOW_ACTIVITY_TIME 100
 
-#define PROGRAMMING_MODE_SWITCH_PIN 3 // 3 of Arduino Pro Micro, SCL, PD0 (18 of Atmega32u4)
+#define WIFI_DUCKY_PROGRAMMING_MODE_SWITCH_PIN 3 // 3 of Arduino Pro Micro, SCL, PD0 (18 of Atmega32u4)
 /*
 Thanks to this switch it will be possible to flash the Esp8266 without the need to upload this code:
 https://gist.github.com/spacehuhn/b2b7d897550bc07b26da8464fa7f4b36
 
 It is incorporated into supremeDuck.ino instead and is activated when the switch is turned on = less hassle with reprogramming Esp
-
-For BLE version it allows sending AT commands using "Tools -> Serial Monitor"
  */
 #define WIFI_DUCKY_GPIO_0_CONTROL_PIN 2 // 2 of Arduino Pro Micro, SDA, PD1 (19 of Atmega32u4)
 #define WIFI_DUCKY_ENABLE_CONTROL_PIN 20 // 20 of Arduino Pro Micro, A2, PF5 (38 of Atmega32u4)
 
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {
-  Programming_mode();
+  Wifi_ducky_programming_mode();
   
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
@@ -166,7 +146,7 @@ void setup()                                    // setup function is a part of e
   Mouse.begin();                                // begin emulating mouse
 
   #ifdef LOG_SERIAL
-    Serial.begin(115200);                           // begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
+    Serial.begin(9600);                           // begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
   #endif
 
   #ifdef WAIT_FOR_SERIAL_MONITOR_TO_OPEN
@@ -195,13 +175,7 @@ void setup()                                    // setup function is a part of e
   SavedEncodingAvailabilityCheck();             //rewrites the default US encoding with the saved one
   SavedMultiLangMethodWindowsCheck();           //checks whether to use the alt+numpad method
 
-  #if !defined (WIFI_DUCKY_SETUP) && !defined (JDY_08_SETUP)
-    ChangeBluetoothCheck();
-  #endif
-
-  #ifdef JDY_08_SETUP
-    ChangeBLECheck();
-  #endif
+  ChangeBluetoothCheck();
 
 /*
   delay(1000);
@@ -239,15 +213,15 @@ void setup()                                    // setup function is a part of e
   digitalWrite(LED_BUILTIN, LOW);  
 }
 
-void Programming_mode(){
-  pinMode(PROGRAMMING_MODE_SWITCH_PIN, INPUT_PULLUP);
+void Wifi_ducky_programming_mode(){
+  #ifdef WIFI_DUCKY_SETUP
+  pinMode(WIFI_DUCKY_PROGRAMMING_MODE_SWITCH_PIN, INPUT_PULLUP);
 
   pinMode(WIFI_DUCKY_GPIO_0_CONTROL_PIN, OUTPUT);
   pinMode(WIFI_DUCKY_ENABLE_CONTROL_PIN, OUTPUT);
 
-  if(digitalRead(PROGRAMMING_MODE_SWITCH_PIN) == LOW){
+  if(digitalRead(WIFI_DUCKY_PROGRAMMING_MODE_SWITCH_PIN) == LOW){
     // If switch was activated then pass all data through Serial1 and allow programming Esp8266 with "Nodemcu Flasher" program.
-    // If the BLE version is used then it allows sending AT commands through "Tools -> Serial Monitor" 
     Serial1.begin(115200);
     Serial.begin(115200);
     digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,LOW);
@@ -272,6 +246,8 @@ void Programming_mode(){
     digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,HIGH);
     digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
   }
+
+  #endif
 }
 
 
@@ -288,19 +264,9 @@ void loop()                                   // loop function is also a part of
       lastByteRec = millis();   
       while (App.available() > 0 && i < MAX_SERIAL_LENGTH-1) 
       {
-        inSerial[i++]=App.read();                               // read bluetooth data (copy it to an array) 
-        if(!inSerial[i-1]){i--; continue;}                           // JDY-08 sends byte equal to 0 after transmiting a message, 
-                                                                // cool thing but HC-06 doesn't have such thing so this ugly check 
-                                                                // is used instead of neat solution using "0" as terminating byte
-                                                                
-        /*char test[20] = {0};
-        sprintf(test, "%d", inSerial[i-1]);
-        Serial.println("ascii = " + String(test));
-        */
-        
+        inSerial[i]=App.read(); i++;                               // read bluetooth data (copy it to an array)         
         if(i == 16)                                                     // mouse movement check (only if the bluetooth receives exactly 16 characters)
         {
-          //Serial.println("i = 16, inSerial = " + String(inSerial+1));
           if(StrStartsWith(inSerial, "MM:") && StrEndsWith(inSerial, ",end")){
               #ifdef LOG_SERIAL
                 Serial.println(inSerial);
@@ -312,8 +278,6 @@ void loop()                                   // loop function is also a part of
         previousByteRec = lastByteRec;
       }    
     }
-
-    
 
     inSerial[i]= 0;                                     // end the string with 0
     #ifdef LOG_SERIAL
@@ -415,12 +379,7 @@ void ChangeBluetoothCheck(){
     
     
     delay(1000);
-    #ifdef LOG_SERIAL
-      if(App.available()){Serial.println("Changed bluetooth name (" + String(at_cmd) + "), response: " + App.readString());}
-      while(App.available()){char c = App.read();}                // just to be sure there's no bytes left
-    #else
-      while(App.available()){char c = App.read();}
-    #endif
+    while(App.available() > 0){char c = App.read();}
   }
 
   numCheck = 0;
@@ -436,73 +395,11 @@ void ChangeBluetoothCheck(){
     delay(700);
     App.print(at_pin_cmd);
 
-    delay(1000);
-    
-    #ifdef LOG_SERIAL
-      if(App.available()){Serial.println("Changed bluetooth pin (" + String(at_pin_cmd) + "), response: " + App.readString());}
-      while(App.available()){char c = App.read();}                // just to be sure there's no bytes left
-    #else
-      while(App.available()){char c = App.read();}
-    #endif
-  }
-}
 
-void ChangeBLECheck(){
-  int numCheck = 0;
-
-  
-  EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, numCheck);
-  if(numCheck == 777)
-  {
-    EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, 0);
-    char bleName[BLE_NAME_SIZE] = {0};
-    EEPROM.get(EEPROM_ADDRESS_BLE_NAME, bleName);
-    char at_cmd[BLE_NAME_SIZE + 15] = {0};
-    sprintf(at_cmd, "AT+NAME%s\0", bleName);
-    delay(700);
-    
-    App.print(at_cmd);
-    
+    //Serial.println("wtf");
     
     delay(1000);
-
-    #ifdef LOG_SERIAL
-      if(App.available()){Serial.println("Changed BLE name (" + String(at_cmd) + "), response: " + App.readString());}
-      while(App.available()){char c = App.read();}                // just to be sure there's no bytes left
-    #else
-      while(App.available()){char c = App.read();}
-    #endif
-  }
-
-  numCheck = 0;
-  
-  EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE, numCheck);
-  if(numCheck == 777)
-  {
-    App.print("AT+ISCEN1");
-    delay(1000);
-    #ifdef LOG_SERIAL
-      if(App.available()){Serial.println("AT+ISCEN1 (enable pin) was sent to BLE module, response: " + App.readString());}
-      while(App.available()){char c = App.read();}                // just to be sure there's no bytes left
-    #else
-      while(App.available()){char c = App.read();}
-    #endif
-    
-    EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE, (int)0);
-    char pin[7] = {0};
-    EEPROM.get(EEPROM_ADDRESS_BLE_PIN, pin);
-    char at_pin_cmd[18] = {0};
-    sprintf(at_pin_cmd, "AT+PASS%s\0", pin);
-    delay(700);
-    App.print(at_pin_cmd);
-    
-    delay(1000);
-    #ifdef LOG_SERIAL
-      if(App.available()){Serial.println("Changed BLE pin (" + String(at_pin_cmd) + "), response: " + App.readString());}
-      while(App.available()){char c = App.read();}                // just to be sure there's no bytes left
-    #else
-      while(App.available()){char c = App.read();}
-    #endif
+    while(App.available() > 0){char c = App.read();}
   }
 }
 
@@ -956,31 +853,13 @@ void Check_Protocol(char *inStr)
       EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, 777);   
   }
 
-  if(IsCmd(inStr, "CBP:")){                     //CBP:3737,end (change bluetooth 4-digit pin, after next reboot)
+  if(IsCmd(inStr, "CBP:")){                     //CBP:3737,end (change bluetooth pin, after next reboot)
       ExtractDeliveredText(inStr, 4);
       char pin[5] = {0};
       sprintf(pin, "%s\0", inStr);
       
       EEPROM.put(EEPROM_ADDRESS_BLUETOOTH_PIN, pin); 
       EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, 777);   
-  }
-
-  if(IsCmd(inStr, "CBLEN:")){                     //CBN:supremeDuck,end (change BLE name, after next reboot)
-      ExtractDeliveredText(inStr, 6);
-      char bleName[BLE_NAME_SIZE] = {0};
-      sprintf(bleName, "%s\0", inStr);
-      
-      EEPROM.put(EEPROM_ADDRESS_BLE_NAME, bleName); 
-      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, 777);   
-  }
-
-  if(IsCmd(inStr, "CBLEP:")){                     //CBP:373737,end (change BLE 6-digit pin, after next reboot)
-      ExtractDeliveredText(inStr, 6);
-      char pin[7] = {0};
-      sprintf(pin, "%s\0", inStr);
-      
-      EEPROM.put(EEPROM_ADDRESS_BLE_PIN, pin); 
-      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE, 777);   
   }
     
   memset(inStr, 0, MAX_SERIAL_LENGTH);
