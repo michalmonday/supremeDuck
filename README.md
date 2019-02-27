@@ -12,6 +12,7 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 * :open_file_folder: download and execute file  
 * :squirrel: [exfiltrate files](https://www.youtube.com/watch?v=TBBT1c2zjms) to Dropbox and Gmail  
 * :diamond_shape_with_a_dot_inside: move mouse cursor  
+* :duck: run ducky script  
 * and [much more](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads)  
 
 
@@ -42,7 +43,7 @@ It was tested and working well with **Windows 10** :heavy_check_mark:, **Windows
 
   
 ## Implementation details  
-The smartphone application was made using "MIT App Inventor 2" and is [open source](https://github.com/michalmonday/supremeDuck/blob/master/source/mobile%20app/supremeDuck.aia). Initially it was made with Arduino Pro Micro and HC-06 bluetooth module. Currently it can also be made and used with Esp8266 wi-fi module instead of HC-06 using the same hardware setup spacehuhn used in [wifi_ducky](https://github.com/spacehuhn/wifi_ducky).  
+The smartphone application was made using "MIT App Inventor 2" and is [open source](https://github.com/michalmonday/supremeDuck/blob/master/source/mobile%20app/supremeDuck.aia). Initially it was made with Arduino Pro Micro and HC-06 bluetooth module. Currently it can also be made and used with Esp8266 wi-fi module instead of HC-06 using the same hardware setup spacehuhn used in [wifi_ducky](https://github.com/spacehuhn/wifi_ducky), see the [guide](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wifi-based-version-(Esp8266)) for more details. It can be also made with JDY-08 (BLE) module, (more details below).  
 
 
 ## Resources  
@@ -52,6 +53,8 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 ![bluetooth version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/bluetooth_small_img.png)  
 - [DIY guide - wifi version](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wifi-based-version-(Esp8266) )  
 ![wifi version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/wifi_small_img.png)  
+- Esp-12F based board ([Parts list and resoures](https://github.com/michalmonday/supremeDuck/wiki/Making-Esp8266-based-PCB), [Assembling video](https://www.youtube.com/watch?v=lb6cKvJvXkY), [EasyEDA project](https://easyeda.com/michalmonday17/supremeduck_wifi), [Tindie sale](https://www.tindie.com/products/michalmonday/wifi-badusb/))  
+![wifi pcb version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/wifi_pcb_small_img.png)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
 - [Usage and more info - wiki](https://github.com/michalmonday/supremeDuck/wiki)  
 - [List of updates](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)  
@@ -61,20 +64,10 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 ## Future  
 According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/evan/2018/09/mit.html) it will be possible to run application made using App Inventor on iOS soon (first quarter of 2019) which means that the supremeDuck application will not be limited to Android only. The progress of their work can be checked at: http://doesappinventorrunonios.com/  
 
-I'm designing 2 PCBs for it. Both will have a very similar components to CJMCU Beetle / Malduino / Arduino Pro Micro. 1 of them will allow easy soldering Esp-12F to the back of it, another one will most likely allow soldering JDY-08, JDY-10 or JDY-06 BLE modules to the back of it. I'm planning to fully share the source files so anyone can check, improve, produce or sell them.  
-The current state of the **Esp-12F** based board can be checked at:  
-https://easyeda.com/michalmonday17/supremeduck_wifi   
-![Esp-12F easyeda preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/Wifi/easyeda_design.png)  
-I just have to wait till the revised version arrives and make sure it works. Here's a preview of the first version that turned out working in the end but had few imperfections.  
-
-![wifi first preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/Wifi/first_version_preview.jpg)  
-
-The state of **JDY-08** (BLE) based board can be checked at:  
+I am planning to design another board based on JDY-08, JDY-10 or JDY-06 BLE modules. The state of **JDY-08** (BLE) based board can be checked at:  
 https://easyeda.com/michalmonday17/supremeduck_jdy-08  
 ![JDY-08 easyeda preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/BLE/easyeda_design.png)  
 I tested the module using this wiring and it worked well, the board design was not tested yet, I am waiting for it to arrive.  
-
-I'm planning to create additional tutorial for the process of making these (I started the [Esp8266-based one](https://github.com/michalmonday/supremeDuck/wiki/Making-Esp8266-based-PCB)). I used to be "scared" of schematics, soldering very small components and idea of designing PCB, it turns out that it can be fun and does not require some very expensive equipment. I'll try to list all the steps and resources once I complete the boards, however it takes time because waiting for parts takes long time...   
 
 
 ## Credits / thanks to / kudos  
