@@ -2,11 +2,11 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 17/02/2019
+Last edited: 01/03/2019
 */
 
 
-#define APP_Version "1.2"                            // It is used to compare it with the mobile app version.
+#define APP_Version "1.21"                            // It is used to compare it with the mobile app version.
                                                      // For example: 1.08 is compatible with 1.081 or 1.83148, 
                                                      // but it's not compatible with 1.09 or 1.091319 
                                                      // (in such case notification will be displayed in the app)
@@ -240,6 +240,10 @@ void setup()                                    // setup function is a part of e
 }
 
 void Programming_mode(){
+  #ifdef WIFI_DUCKY_SETUP
+    delay(2000); // this seems to fix bug (bug of Esp not working properly sometimes, idk why)
+  #endif
+ 
   pinMode(PROGRAMMING_MODE_SWITCH_PIN, INPUT_PULLUP);
 
   pinMode(WIFI_DUCKY_GPIO_0_CONTROL_PIN, OUTPUT);
@@ -269,6 +273,7 @@ void Programming_mode(){
         }
     }
   }else{
+    
     digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,HIGH);
     digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
   }
