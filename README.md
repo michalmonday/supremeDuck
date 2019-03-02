@@ -53,7 +53,7 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 ![bluetooth version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/bluetooth_small_img.png)  
 - [DIY guide - wifi version](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wifi-based-version-(Esp8266) )  
 ![wifi version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/wifi_small_img.png)  
-- Esp-12F based board ([Parts list and resources](https://github.com/michalmonday/supremeDuck/wiki/Making-Esp8266-based-PCB), [Assembling video](https://www.youtube.com/watch?v=lb6cKvJvXkY), [EasyEDA project](https://easyeda.com/michalmonday17/supremeduck_wifi), [Tindie sale](https://www.tindie.com/products/michalmonday/wifi-badusb/))  
+- [Documentation of Esp-12F based board](https://github.com/michalmonday/supremeDuck/wiki/Esp-12F-based-board-documentation)  
 ![wifi pcb version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/wifi_pcb_small_img.png)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
 - [Usage and more info - wiki](https://github.com/michalmonday/supremeDuck/wiki)  
