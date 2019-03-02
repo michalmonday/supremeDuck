@@ -2,11 +2,11 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 01/03/2019
+Last edited: 02/03/2019
 */
 
 
-#define APP_Version "1.21"                            // It is used to compare it with the mobile app version.
+#define APP_Version "1.22"                            // It is used to compare it with the mobile app version.
                                                      // For example: 1.08 is compatible with 1.081 or 1.83148, 
                                                      // but it's not compatible with 1.09 or 1.091319 
                                                      // (in such case notification will be displayed in the app)
@@ -156,24 +156,30 @@ For BLE version it allows sending AT commands using "Tools -> Serial Monitor"
 
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {
-  Programming_mode();
-  
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
-  App.begin(MODULE_BAUDRATE);                  // begin communication with the bluetooth module
-  //Keyboard.begin();                           // begin emulating keyboard
-  Keyboard.begin();
-  Mouse.begin();                                // begin emulating mouse
-
   #ifdef LOG_SERIAL
     Serial.begin(115200);                           // begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
   #endif
+  App.begin(MODULE_BAUDRATE);                  // begin communication with the wireless module
 
   #ifdef WAIT_FOR_SERIAL_MONITOR_TO_OPEN
     while(!Serial){
       ;
     }
   #endif
+  
+  Programming_mode();
+  #ifdef WIFI_DUCKY_SETUP
+    InitEsp();
+  #endif
+  
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+  
+  //Keyboard.begin();                           // begin emulating keyboard
+  Keyboard.begin();
+  Mouse.begin();                                // begin emulating mouse
+
+
   
   /*
   //TRIGGER TRICK
@@ -239,21 +245,77 @@ void setup()                                    // setup function is a part of e
   digitalWrite(LED_BUILTIN, LOW);  
 }
 
-void Programming_mode(){
-  #ifdef WIFI_DUCKY_SETUP
-    delay(2000); // this seems to fix bug (bug of Esp not working properly sometimes, idk why)
-  #endif
- 
-  pinMode(PROGRAMMING_MODE_SWITCH_PIN, INPUT_PULLUP);
-
+#ifdef WIFI_DUCKY_SETUP
+void InitEsp(){
+/*
+This function is necessary for one reason: bug. For some reason sometimes Esp does not run the code. This function will make sure that Esp 
+is actually running the code by resetting it if it isn't. (reseting is done by setting "EN"-controlling pin to LOW for a moment.
+Keeping in mind that this bug happens rarely (around 1 in 15 plug-ins) I think that the solution will be effective (method was tested with separate code
+to make sure that in the bug-occuring circumstances the reset method will actually result in code being run).
+ */
   pinMode(WIFI_DUCKY_GPIO_0_CONTROL_PIN, OUTPUT);
   pinMode(WIFI_DUCKY_ENABLE_CONTROL_PIN, OUTPUT);
+  
+  // set esp to working mode
+  digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,HIGH); delay(10);
+  digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
+  delay(1500); // (esp blinks for 1 second at the start
+  
+  // clear serial
+  App.setTimeout(100); // blocking time of readString
+
+  bool esp_runs_code = false;
+  while(!esp_runs_code){
+    if(App.available()){App.readString();}
+    
+    // send control message
+    App.print(":you_ok?");
+
+    delay(300);
+    
+    if(App.available()){
+      if(App.readString().equals("im_ok")){
+        esp_runs_code = true;
+        #ifdef LOG_SERIAL
+          Serial.println("Esp runs");
+        #endif
+      }
+    }else{
+      #ifdef LOG_SERIAL
+        Serial.println("Esp didn't respond, resetting.");
+      #endif
+    }
+
+    if(!esp_runs_code){
+      ResetEsp();
+      delay(2000);
+    }
+  }
+}
+
+void ResetEsp(){
+  App.end();
+  digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,LOW);
+  delay(50);  
+  digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
+  App.begin(MODULE_BAUDRATE);
+  App.setTimeout(100);
+}
+
+#endif
+
+void Programming_mode(){
+  pinMode(PROGRAMMING_MODE_SWITCH_PIN, INPUT_PULLUP);
 
   if(digitalRead(PROGRAMMING_MODE_SWITCH_PIN) == LOW){
     // If switch was activated then pass all data through Serial1 and allow programming Esp8266 with "Nodemcu Flasher" program.
     // If the BLE version is used then it allows sending AT commands through "Tools -> Serial Monitor" 
     Serial1.begin(115200);
     Serial.begin(115200);
+    
+    pinMode(WIFI_DUCKY_GPIO_0_CONTROL_PIN, OUTPUT);
+    pinMode(WIFI_DUCKY_ENABLE_CONTROL_PIN, OUTPUT);
+  
     digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,LOW);
     digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
 
@@ -272,10 +334,6 @@ void Programming_mode(){
           }
         }
     }
-  }else{
-    
-    digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,HIGH);
-    digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
   }
 }
 

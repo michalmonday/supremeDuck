@@ -52,27 +52,25 @@ char response[MAX_RESPONSE] = {0};
 #define EEPROM_ADDRESS_AP_PASS_CHECK 36
 #define EEPROM_ADDRESS_AP_PASS 40
 
-
 void HandleData();
 void Read_AP_EEPROM_Creds();
 
 ESP8266WebServer server(80);
 
-
 #define LED_PIN 2
 
 void setup() {  
-  delay(1000);
+  Serial.setTimeout(100); // Serial.readString function blocking time
+  
   Serial.begin(115200);
 
   pinMode(LED_PIN, OUTPUT);
 
+  // 1 second blink to show it runs the code
   digitalWrite(LED_PIN, LOW);
-
   delay(1000);
-
   digitalWrite(LED_PIN, HIGH);
-  
+
   //Serial.println();
   //Serial.print("Configuring access point...");
   
@@ -147,6 +145,15 @@ void setup() {
 
 void loop() {
   server.handleClient();
+
+  if(Serial.available() == 8 && Serial.peek() == ':'){ // if first letter is not ':' then don't read it, means that the main chip can't send anything that starts with ":" to the mobile app... (ugly but I feel that it has to be in one way or another)
+    String in_str = Serial.readString();
+    if(in_str.equals(":you_ok?")){
+      Serial.print("im_ok");    
+      // 3 quick blinks (to let know that it communicated with the main chip well
+      digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50); digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50); digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50);   
+    }
+  }
 }
 
 
