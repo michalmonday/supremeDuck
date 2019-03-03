@@ -92,4 +92,4 @@ I tested the module using this wiring and it worked well, the board design was n
 
 
 ## More images  
-[Pics](https://github.com/michalmonday/supremeDuck/tree/master/resources/repository%20stuff/random_images/images.md)  
+[Pics](https://github.com/michalmonday/files/tree/master/supremeDuck/resources/repository%20stuff/random_images/images.md)  
