@@ -12,7 +12,7 @@ Last edited: 02/03/2019
                                                      // (in such case notification will be displayed in the app)
 
 // comment-out all to use standard bluetooth version (HC-06)                                                         
-#define WIFI_DUCKY_SETUP                             // uncomment if you're using "Esp8266" (e.g. the same hardware/wiring as wifi_ducky)
+//#define WIFI_DUCKY_SETUP                             // uncomment if you're using "Esp8266" (e.g. the same hardware/wiring as wifi_ducky)
 //#define JDY_10_SETUP                                 // uncommend if using JDY-10 (BLE module), AT commands are followed by "carriage return" (\r) and "newline" (\n) bytes unlike JDY-08
 //#define JDY_08_SETUP                                 // uncomment if you're using JDY-08 (BLE module) based version, JDY-08 (BLE) module 
                                                      // uses "AT+PASS" and 6 digits for setting pin (instead of "AT+PIN" and 4 digits like HC-06)

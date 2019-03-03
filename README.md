@@ -89,7 +89,3 @@ I tested the module using this wiring and it worked well, the board design was n
 [WHID_elite](https://github.com/whid-injector/whid-elite) - SMS based HID with neat exfiltration method, mousejacking and other features.  
 [Bluetooth Rubber Duck](https://hackaday.io/project/27533-bluetooth-rubber-duck) - Digispark + HC-06 + application wireless HID.  
 [The Darkwing Duck](https://www.youtube.com/watch?v=oh7TcU3XbuQ) - Pro Micro + HC-06 + App inventor application wireless HID.  
-
-
-## More images  
-[Pics](https://github.com/michalmonday/files/tree/master/supremeDuck/resources/repository%20stuff/random_images/images.md)  
