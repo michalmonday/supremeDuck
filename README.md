@@ -1,4 +1,4 @@
-![title-image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/github_banner.png)  
+![title-image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/github_banner.png)  
 
 ## What is it?  
 It's a device that can be connected to a PC and pretend to be keyboard and mouse. The user can trigger specific actions using smartphone through wifi or bluetooth.  
@@ -18,9 +18,9 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 
 ## Notable features  
 * Automatic [OS detection](https://github.com/keyboardio/FingerprintUSBHost), allowing it to work on Windows, Linux, and macOS.  
-![os logos image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/os_logos.png)  
+![os logos image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/os_logos.png)  
 * Preview feature, it allows to see what youtube video, wallpaper or website will be launched on the target PC.  
-![Preview-feature-gif](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/preview_option_for_youtube_and_websites.gif)  
+![Preview-feature-gif](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/preview_option_for_youtube_and_websites.gif)  
 * Option to use [alt+numpad](https://github.com/michalmonday/supremeDuck/wiki/MultiLang-method) combinations on Windows (to type correct characters regardless of system language)  
 * Language switching to match the language setting on target machine without the need to reprogram the device. Supported settings are:  
 
@@ -31,11 +31,11 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 | Italian | Norwegian | Portuguese | Slovenian | El Salvador | US |
 > You can see how reliable are some of these settings [here](https://github.com/michalmonday/supremeDuck/wiki/Encoding-effectiveness)  
 * "Live text execution" checkbox  
-<img src="https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/live_text.png" height="100">  
+<img src="https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/live_text.png" height="100">  
 
 ## Video  
 [Review and presentation video](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2) thanks to:  
-[![image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/JackkTutorials.png)](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)
+[![image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/JackkTutorials.png)](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)
 
 
 ## Is it going to work on any PC and work instantly?  
@@ -48,13 +48,13 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 
 ## Resources  
 - [Application](https://play.google.com/store/apps/details?id=appinventor.ai_michalmonday17.supremeDuck)  
-[![google store image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/google_play.png)](https://play.google.com/store/apps/details?id=appinventor.ai_michalmonday17.supremeDuck)  
+[![google store image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/google_play.png)](https://play.google.com/store/apps/details?id=appinventor.ai_michalmonday17.supremeDuck)  
 - [DIY guide - bluetooth version](https://github.com/michalmonday/supremeDuck/wiki/DIY-Tutorial)  
-![bluetooth version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/bluetooth_small_img.png)  
+![bluetooth version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/bluetooth_small_img.png)  
 - [DIY guide - wifi version](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wifi-based-version-(Esp8266) )  
-![wifi version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/wifi_small_img.png)  
+![wifi version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/wifi_small_img.png)  
 - [Documentation of Esp-12F based board](https://github.com/michalmonday/supremeDuck/wiki/Esp-12F-based-board-documentation)  
-![wifi pcb version image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/readme_images/wifi_pcb_small_img.png)  
+![wifi pcb version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/wifi_pcb_small_img.png)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
 - [Usage and more info - wiki](https://github.com/michalmonday/supremeDuck/wiki)  
 - [List of updates](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)  
@@ -66,7 +66,7 @@ According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/ev
 
 I am planning to design another board based on JDY-08, JDY-10 or JDY-06 BLE modules. The state of **JDY-08** (BLE) based board can be checked at:  
 https://easyeda.com/michalmonday17/supremeduck_jdy-08  
-![JDY-08 easyeda preview image](https://raw.githubusercontent.com/michalmonday/supremeDuck/master/resources/repository%20stuff/PCBs/BLE/easyeda_design.png)  
+![JDY-08 easyeda preview image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/PCBs/BLE/easyeda_design.png)  
 I tested the module using this wiring and it worked well, the board design was not tested yet, I am waiting for it to arrive.  
 
 

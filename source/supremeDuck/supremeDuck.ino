@@ -11,18 +11,16 @@ Last edited: 02/03/2019
                                                      // but it's not compatible with 1.09 or 1.091319 
                                                      // (in such case notification will be displayed in the app)
 
-                                                         
-//#define WIFI_DUCKY_SETUP                             // uncomment if you're using "Esp8266" (e.g. the same hardware/wiring as wifi_ducky)
+// comment-out all to use standard bluetooth version (HC-06)                                                         
+#define WIFI_DUCKY_SETUP                             // uncomment if you're using "Esp8266" (e.g. the same hardware/wiring as wifi_ducky)
+//#define JDY_10_SETUP                                 // uncommend if using JDY-10 (BLE module), AT commands are followed by "carriage return" (\r) and "newline" (\n) bytes unlike JDY-08
 //#define JDY_08_SETUP                                 // uncomment if you're using JDY-08 (BLE module) based version, JDY-08 (BLE) module 
                                                      // uses "AT+PASS" and 6 digits for setting pin (instead of "AT+PIN" and 4 digits like HC-06)
                                                      // and requires "AT+ISCEN1" to activate pairing password at all (password for pairing is 
                                                      // disabled by default because it's problematic)
+                                                  
 
-#if defined (WIFI_DUCKY_SETUP) && defined (JDY_08_SETUP)
-  #error "WIFI_DUCKY_SETUP or JDY_08_SETUP can't be defined at the same time, comment-out the one that should not be used."
-#endif
-
-#if defined (WIFI_DUCKY_SETUP) || defined (JDY_08_SETUP)
+#if defined (WIFI_DUCKY_SETUP) || defined (JDY_08_SETUP) || defined (JDY_10_SETUP)
   #define USE_TX_RX_PINS                             //  TX/RX pins of pro micro instead of 9/8 pins and software serial library 
   #define MODULE_BAUDRATE 115200                     // use higher baudrate for Esp8266 (better speed for plain text/ducky scripts) 
 #else
@@ -201,11 +199,11 @@ void setup()                                    // setup function is a part of e
   SavedEncodingAvailabilityCheck();             //rewrites the default US encoding with the saved one
   SavedMultiLangMethodWindowsCheck();           //checks whether to use the alt+numpad method
 
-  #if !defined (WIFI_DUCKY_SETUP) && !defined (JDY_08_SETUP)
+  #if !defined (WIFI_DUCKY_SETUP) && !defined (JDY_08_SETUP) && !defined (JDY_10_SETUP)
     ChangeBluetoothCheck();
   #endif
 
-  #ifdef JDY_08_SETUP
+  #if defined (JDY_08_SETUP) || defined (JDY_10_SETUP)
     ChangeBLECheck();
   #endif
 
@@ -520,8 +518,14 @@ void ChangeBLECheck(){
     EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, 0);
     char bleName[BLE_NAME_SIZE] = {0};
     EEPROM.get(EEPROM_ADDRESS_BLE_NAME, bleName);
-    char at_cmd[BLE_NAME_SIZE + 15] = {0};
-    sprintf(at_cmd, "AT+NAME%s\0", bleName);
+    char at_cmd[BLE_NAME_SIZE + 17] = {0};
+    
+    #ifdef JDY_10_SETUP
+      sprintf(at_cmd, "AT+NAME%s\r\n\0", bleName);
+    #else                                                 // else JDY-08 (that doesn't use \r\n)
+      sprintf(at_cmd, "AT+NAME%s\0", bleName);
+    #endif
+    
     delay(700);
     
     App.print(at_cmd);
@@ -554,8 +558,12 @@ void ChangeBLECheck(){
     EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE, (int)0);
     char pin[7] = {0};
     EEPROM.get(EEPROM_ADDRESS_BLE_PIN, pin);
-    char at_pin_cmd[18] = {0};
-    sprintf(at_pin_cmd, "AT+PASS%s\0", pin);
+    char at_pin_cmd[20] = {0};
+    #ifdef JDY_10_SETUP
+      sprintf(at_pin_cmd, "AT+PASS%s\r\n\0", pin);
+    #else                                                 // else JDY-08 (that doesn't use \r\n)
+      sprintf(at_pin_cmd, "AT+PASS%s\0", pin);
+    #endif
     delay(700);
     App.print(at_pin_cmd);
     
