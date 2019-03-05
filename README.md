@@ -55,6 +55,8 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 ![wifi version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/wifi_small_img.png)  
 - [Documentation of Esp-12F based board](https://github.com/michalmonday/supremeDuck/wiki/Esp-12F-based-board-documentation)  
 ![wifi pcb version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/wifi_pcb_small_img.png)  
+- [Documentation of JDY-08 based board](https://github.com/michalmonday/supremeDuck/wiki/JDY_08-based-board-documentation)  
+![jdy-08 version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/PCBs/BLE/JDY-08/jdy_08_small_image.png)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
 - [Usage and more info - wiki](https://github.com/michalmonday/supremeDuck/wiki)  
 - [List of updates](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)  
@@ -63,11 +65,6 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 
 ## Future  
 According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/evan/2018/09/mit.html) it will be possible to run application made using App Inventor on iOS soon (first quarter of 2019) which means that the supremeDuck application will not be limited to Android only. The progress of their work can be checked at: http://doesappinventorrunonios.com/  
-
-I am planning to design another board based on JDY-08, JDY-10 or JDY-06 BLE modules. The state of **JDY-08** (BLE) based board can be checked at:  
-https://easyeda.com/michalmonday17/supremeduck_jdy-08  
-![JDY-08 easyeda preview image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/PCBs/BLE/easyeda_design.png)  
-I tested the module using this wiring and it worked well, the board design was not tested yet, I am waiting for it to arrive.  
 
 
 ## Credits / thanks to / kudos  
