@@ -2,11 +2,11 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 02/03/2019
+Last edited: 05/03/2019
 */
 
 
-#define APP_Version "1.22"                            // It is used to compare it with the mobile app version.
+#define APP_Version "1.23"                            // It is used to compare it with the mobile app version.
                                                      // For example: 1.08 is compatible with 1.081 or 1.83148, 
                                                      // but it's not compatible with 1.09 or 1.091319 
                                                      // (in such case notification will be displayed in the app)
@@ -464,6 +464,7 @@ void ChangeBluetoothCheck(){
   EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, numCheck);
   if(numCheck == 777)
   {
+    delay(700);                                 // delay is there to avoid accidentally sending AT command when unplugging (in case if board resets during unplug and reboots quickly)
     EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, 0);
     char bluetoothName[BLUETOOTH_NAME_SIZE] = {0};
     //Serial.println(bluetoothName);
@@ -489,6 +490,7 @@ void ChangeBluetoothCheck(){
   EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, numCheck);
   if(numCheck == 777)
   {
+    delay(700);                                 // delay is there to avoid accidentally sending AT command when unplugging (in case if board resets during unplug and reboots quickly)
     EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, (int)0);
     char pin[5] = {0};
     EEPROM.get(EEPROM_ADDRESS_BLUETOOTH_PIN, pin);
@@ -515,6 +517,7 @@ void ChangeBLECheck(){
   EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, numCheck);
   if(numCheck == 777)
   {
+    delay(700);                                 // delay is there to avoid accidentally sending AT command when unplugging (in case if board resets during unplug and reboots quickly)
     EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, 0);
     char bleName[BLE_NAME_SIZE] = {0};
     EEPROM.get(EEPROM_ADDRESS_BLE_NAME, bleName);
@@ -546,7 +549,12 @@ void ChangeBLECheck(){
   EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE, numCheck);
   if(numCheck == 777)
   {
-    App.print("AT+ISCEN1");
+    delay(700);                                 // delay is there to avoid accidentally sending AT command when unplugging (in case if board resets during unplug and reboots quickly)
+    #ifdef JDY_10_SETUP
+      App.print("AT+ISCEN1\r\n");
+    #else
+      App.print("AT+ISCEN1");
+    #endif
     delay(1000);
     #ifdef LOG_SERIAL
       if(App.available()){Serial.println("AT+ISCEN1 (enable pin) was sent to BLE module, response: " + App.readString());}
