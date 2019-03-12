@@ -2,11 +2,11 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 05/03/2019
+Last edited: 12/03/2019
 */
 
 
-#define APP_Version "1.23"                            // It is used to compare it with the mobile app version.
+#define APP_Version "1.24"                            // It is used to compare it with the mobile app version.
                                                      // For example: 1.08 is compatible with 1.081 or 1.83148, 
                                                      // but it's not compatible with 1.09 or 1.091319 
                                                      // (in such case notification will be displayed in the app)
@@ -313,7 +313,10 @@ void Programming_mode(){
     
     pinMode(WIFI_DUCKY_GPIO_0_CONTROL_PIN, OUTPUT);
     pinMode(WIFI_DUCKY_ENABLE_CONTROL_PIN, OUTPUT);
-  
+
+    digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,LOW); // set it low first to reset the Esp-12F
+    delay(500);
+    
     digitalWrite(WIFI_DUCKY_GPIO_0_CONTROL_PIN,LOW);
     digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN,HIGH);
 
