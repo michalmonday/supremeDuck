@@ -57,6 +57,8 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 ![wifi pcb version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/wifi_pcb_small_img.png)  
 - [Documentation of JDY-08 (BLE) based board](https://github.com/michalmonday/supremeDuck/wiki/JDY_08-based-board-documentation)  
 ![jdy-08 version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/PCBs/BLE/JDY-08/jdy_08_small_image.png)  
+- [Documentation of JDY-10 (BLE) based board](https://github.com/michalmonday/supremeDuck/wiki/JDY_10-based-board-documentation)  
+![jdy-08 version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/PCBs/BLE/JDY-10/small_image.png)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
 - [Usage and more info - wiki](https://github.com/michalmonday/supremeDuck/wiki)  
 - [List of updates](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)  
@@ -74,6 +76,7 @@ According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/ev
 :star: Mr [Jesse Vincent](https://shop.keyboard.io/pages/about-us) who created [FingerprintUSBHost](https://github.com/keyboardio/FingerprintUSBHost) which allows to recognize operating system of the target machine. Noteworthy is that :star: [gloglas](https://github.com/gloglas) used it in [WifiDuckV2](https://github.com/gloglas/WifiDuckV2) (giving me idea to use it too) which is rewrite of :star: [spacehuhns](https://github.com/spacehuhn)'s [wifi_ducky](https://github.com/spacehuhn/wifi_ducky).  
 :star: [JackkTutorials](https://www.youtube.com/user/JackkTutorials/videos) - thanks for presenting this project in a video.  
 :star: [Taifun](https://puravidaapps.com/index.php) - thanks for great App Inventor resources and [extensions](https://puravidaapps.com/extensions.php), this project is using few of them.   
+:star: Mr [Martyn Currey](http://www.martyncurrey.com/about/) for excellent BLE [tutorial and resources](http://www.martyncurrey.com/arduino-hm-10-and-app-inventor-2/).  
 
 
 ## Similar projects  
