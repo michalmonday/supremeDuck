@@ -61,9 +61,7 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 ![jdy-10 version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/PCBs/BLE/JDY-10/small_image.png)  
 - [Device types comparison](https://github.com/michalmonday/supremeDuck/wiki/Device-types-comparison) (advantages and disadvantages of using Wifi/BLE/Bluetooth versions)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
-- [Usage and more info - wiki](https://github.com/michalmonday/supremeDuck/wiki)  
 - [List of updates](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)  
-- [Assembling service](http://prankingdevice.co.uk)  
 
 
 ## Future  
