@@ -62,6 +62,7 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 - [Device types comparison](https://github.com/michalmonday/supremeDuck/wiki/Device-types-comparison) (advantages and disadvantages of using Wifi/BLE/Bluetooth versions)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
 - [List of updates](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)  
+- :moneybag:[Devices for sale](https://prankingdevice.co.uk):moneybag:  
 
 
 ## Future  
