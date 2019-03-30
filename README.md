@@ -19,6 +19,7 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 ## Notable features  
 * Automatic [OS detection](https://github.com/keyboardio/FingerprintUSBHost), allowing it to work on Windows, Linux, and macOS.  
 ![os logos image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/os_logos.png)  
+* Built-in presets with funny/weird videos and images.   
 * Preview feature, it allows to see what youtube video, wallpaper or website will be launched on the target PC.  
 ![Preview-feature-gif](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/preview_option_for_youtube_and_websites.gif)  
 * Option to use [alt+numpad](https://github.com/michalmonday/supremeDuck/wiki/MultiLang-method) combinations on Windows (to type correct characters regardless of system language)  
@@ -43,7 +44,7 @@ It was tested and working well with **Windows 10** :heavy_check_mark:, **Windows
 
   
 ## Implementation details  
-The smartphone application was made using "MIT App Inventor 2" and is [open source](https://github.com/michalmonday/supremeDuck/blob/master/source/mobile%20app/supremeDuck.aia). Initially it was made with Arduino Pro Micro and HC-06 bluetooth module. Currently it can also be made and used with Esp8266 wi-fi module instead of HC-06 using the same hardware setup spacehuhn used in [wifi_ducky](https://github.com/spacehuhn/wifi_ducky), see the [guide](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wifi-based-version-(Esp8266)) for more details. It can be also made with JDY-08 (BLE) module, (more details below).  
+The smartphone application was made using "MIT App Inventor 2" and is [open source](https://github.com/michalmonday/supremeDuck/blob/master/source/mobile%20app/supremeDuck.aia). Initially it was made with Arduino Pro Micro and HC-06 bluetooth module. Currently it can also be made and used with Esp8266 wi-fi module instead of HC-06 using the same hardware setup spacehuhn used in [wifi_ducky](https://github.com/spacehuhn/wifi_ducky), see the [guide](https://github.com/michalmonday/supremeDuck/wiki/How-to-make-wifi-based-version-(Esp8266)) for more details. It can be also made with JDY-10 and JDY-08 (BLE) modules (more details below).  
 
 
 ## Resources  
@@ -62,7 +63,7 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 - [Device types comparison](https://github.com/michalmonday/supremeDuck/wiki/Device-types-comparison) (advantages and disadvantages of using Wifi/BLE/Bluetooth versions)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
 - [List of updates](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)  
-- :moneybag:[Devices for sale](https://prankingdevice.co.uk):moneybag:  
+- :moneybag:[Devices for sale](http://prankingdevice.co.uk):moneybag:  
 
 
 ## Future  
@@ -89,3 +90,4 @@ According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/ev
 [WHID_elite](https://github.com/whid-injector/whid-elite) - SMS based HID with neat exfiltration method, mousejacking and other features.  
 [Bluetooth Rubber Duck](https://hackaday.io/project/27533-bluetooth-rubber-duck) - Digispark + HC-06 + application wireless HID.  
 [The Darkwing Duck](https://www.youtube.com/watch?v=oh7TcU3XbuQ) - Pro Micro + HC-06 + App inventor application wireless HID.  
+[badusb.pw](https://badusb.pw) - I can't understand much but there are some relevant designs (of a board like WHID).  
