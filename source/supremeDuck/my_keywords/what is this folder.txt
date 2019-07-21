@@ -1,0 +1,14 @@
+You can put it in the Arduino libraries folder,
+this way Arduino IDE will read "keywords.txt" and
+it will nicely colour class/methods/literal names 
+
+e.g. "WirelessModule" will turn orange.
+
+Example of path:
+C:\Program Files (x86)\Arduino\libraries\my_keywords
+
+You can modify "keywords.txt" to add your own stuff
+to highlight.
+
+It doesn't change functionality of the code.
+It only makes more comfortable to read the code.

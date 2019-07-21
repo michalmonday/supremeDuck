@@ -23,7 +23,6 @@
 #define KEYBOARD_h
 
 #include "HID.h"
-#include "Definitions.h"
 
 #if !defined(_USING_HID)
 
@@ -97,75 +96,21 @@ class Keyboard_ : public Print
 {
 private:
   KeyReport _keyReport;
-
-  bool use_alt_codes;
-  
-  /*
-  Default delay info: https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Duckyscript
-  "DEFAULT_DELAY or DEFAULTDELAY is used to define how long (milliseconds) to wait between each subsequent command. 
-  DEFAULT_DELAY must be issued at the beginning of the ducky script and is optional. Not specifying the DEFAULT_DELAY will result in faster execution of ducky scripts. 
-  This command is mostly useful when debugging."
-  */
-  int default_delay; 
-  byte keypress_time;
-
-  unsigned long last_alt_tab_time;
-
-  int GetKeyIndex(byte c, byte* char_array);
-  void PressRelease(char c, byte timeDelay);
-  bool IsException(char c);
-  bool IsModifier(char c);
-  
 public:
   Keyboard_(void);
   void begin(void);
   void end(void);
   size_t write(uint8_t k);
   size_t write(const uint8_t *buffer, size_t size);
-  size_t press(uint8_t k);  
-    size_t PressAndWait(uint8_t k, long duration){ size_t ret = press(k); delay(duration); return ret; }
-    size_t PressAndWait(uint8_t k){ return PressAndWait(k, keypress_time); }
+  size_t press(uint8_t k);
   size_t release(uint8_t k);
- 
+  size_t pressRaw(uint8_t k);
+  size_t releaseRaw(uint8_t k);
+  size_t pressRawModifier(uint8_t k);
+  size_t releaseRawModifier(uint8_t k);
+  
   void releaseAll(void);
   void sendReport(KeyReport* keys);
-
-  size_t PressRaw(uint8_t k);
-  size_t ReleaseRaw(uint8_t k);
-  size_t PressRawModifier(uint8_t k);
-  size_t ReleaseRawModifier(uint8_t k);
-
-// Not needed but may stay
-/*
-  void TypeKey(int key);
-  void OpenRun();
-  void OpenCmd();
-  void EnterCommand(char *text);
-*/
-
-  void Print(char *inStr);
-
-  void SetDefaultDelay(int i){ default_delay = i; }
-  int GetDefaultDelay(){ return default_delay; }
-
-  void SetKeypressTime(int i){ keypress_time = i; }
-  int GetKeypressTime(){ return keypress_time; }
-
-  bool IsUsingAltCodes(){ return use_alt_codes; }
-  void UseAltCodes(bool decision);
-  void LoadAltCodesUseState();
-  
-  char * GetEncodingName();
-  void SetEncodingName(char * name_);
-  bool WasEncodingPreviouslySaved();
-  void LoadEncoding();
-  void SetEncoding(int segment_index, char * enc_str);
-
-  bool IsItTimeTo_ReleaseAltTab();
-  void ReleaseAltTab();
-  void AltTabOnce();    // TODO: add duration_before_release parameter instead of "#define ALT_TAB_AUTORELEASE"
-
-  
 };
 extern Keyboard_ Keyboard;
 

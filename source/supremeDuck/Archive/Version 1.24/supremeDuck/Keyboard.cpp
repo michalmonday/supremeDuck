@@ -23,31 +23,6 @@
 
 #if defined(_USING_HID)
 
-
-#include <EEPROM.h>
-#include "Funcs.h"
-
-byte Encoding[3][ENCODING_SIZE] = {
-  { 33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,77,81,87,89,90,91,92,93,94,95,96,97,105,109,113,119,121,122,123,124,125,126,127 },
-  { 30,52,32,33,34,36,52,38,39,37,46,54,45,55,56,39,30,31,32,33,34,35,36,37,38,51,51,54,46,55,56,31,4,16,20,26,28,29,47,49,48,35,45,53,4,12,16,20,26,28,29,47,49,48,53,42 },
-  { 2,2,2,2,2,2,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,2,2,2,2,2,2,2,2,2,0,0,0,2,2,0,0,0,0,0,0,0,0,2,2,2,2,0 },
-};
-char encoding_name[ENCODING_NAME_SIZE] = {"US"}; 
-
-#define EXCEPTIONS_SIZE 24
-char exceptions[EXCEPTIONS_SIZE] = {
-  'y','Y',
-  'z','Z',
-  'q','Q',
-  'a','A',
-  'm','M',
-  'w','W',
-  'i','I',
-  '0','1','2','3','4','5','6','7','8','9',
-};
-byte KEYPAD[10] = {234, 225, 226, 227, 228, 229, 230, 231, 232, 233};
-
-
 //================================================================================
 //================================================================================
 //	Keyboard
@@ -85,10 +60,7 @@ static const uint8_t _hidReportDescriptor[] PROGMEM = {
     0xc0,                          // END_COLLECTION
 };
 
-Keyboard_::Keyboard_(void) : 
-  default_delay(0), 
-  keypress_time(5),
-  last_alt_tab_time(0)
+Keyboard_::Keyboard_(void) 
 {
 	static HIDSubDescriptor node(_hidReportDescriptor, sizeof(_hidReportDescriptor));
 	HID().AppendDescriptor(&node);
@@ -292,7 +264,7 @@ size_t Keyboard_::press(uint8_t k)
 	return 1;
 }
 
-size_t Keyboard_::PressRaw(uint8_t k){
+size_t Keyboard_::pressRaw(uint8_t k){
   uint8_t i;
   if (_keyReport.keys[0] != k && _keyReport.keys[1] != k && 
     _keyReport.keys[2] != k && _keyReport.keys[3] != k &&
@@ -313,7 +285,7 @@ size_t Keyboard_::PressRaw(uint8_t k){
   return 1;
 }
 
-size_t Keyboard_::ReleaseRaw(uint8_t k){
+size_t Keyboard_::releaseRaw(uint8_t k){
   uint8_t i;
   for (i=0; i<6; i++) {
     if (0 != k && _keyReport.keys[i] == k) {
@@ -324,13 +296,13 @@ size_t Keyboard_::ReleaseRaw(uint8_t k){
   return 1;
 }
 
-size_t Keyboard_::PressRawModifier(uint8_t k){
+size_t Keyboard_::pressRawModifier(uint8_t k){
   _keyReport.modifiers |= k;
   sendReport(&_keyReport);
   return 1;
 }
 
-size_t Keyboard_::ReleaseRawModifier(uint8_t k){
+size_t Keyboard_::releaseRawModifier(uint8_t k){
   _keyReport.modifiers &= ~(k);
   sendReport(&_keyReport);
   return 1;
@@ -403,290 +375,6 @@ size_t Keyboard_::write(const uint8_t *buffer, size_t size) {
 	}
 	return n;
 }
-
-
-
-void Keyboard_::Print(char *inStr)
-{   
-  int enc_index; 
-  for(byte i=0; i<strlen(inStr); i++)               //for each character in the string
-  {  
-    if (use_alt_codes && !IsModifier(inStr[i]) && ((!isalnum(inStr[i]) && inStr[i] != ' ') || IsException(inStr[i])))       //if character is punctuation or requires different button to be pressed in different keyboard language settings then use alt+numpad method
-    {
-  
-      byte hundreds = (byte)inStr[i] / 100;
-      byte dozens = ((byte)inStr[i] - (hundreds*100)) / 10;
-      byte singles = (byte)inStr[i] - (hundreds*100) - (dozens*10);
-
-      /*
-      Serial.print(hundreds);
-      Serial.print(dozens);
-      Serial.println(singles);
-      */
-    
-      press(KEY_LEFT_ALT);
-      PressRelease((char)KEYPAD[hundreds], keypress_time);
-      PressRelease((char)KEYPAD[dozens], keypress_time);
-      PressRelease((char)KEYPAD[singles], keypress_time);
-      releaseAll();
-      continue;
-    }
-  
-    enc_index = GetKeyIndex(inStr[i], Encoding[ENCODING_BYTE_DESIRED]);
-    if(enc_index < 256 && !IsModifier(inStr[i]))                            //256 means it's a key not present in the array (key which does not need a substitution because it is the same for any keyboard setting)
-    {    
-      if(Encoding[ENCODING_BYTE_MODIFIER][enc_index] > 0)
-      {
-        PressRawModifier(Encoding[ENCODING_BYTE_MODIFIER][enc_index]);
-        delay(keypress_time);
-      }
-
-      PressRaw(Encoding[ENCODING_BYTE_USED][enc_index]);
-      delay(keypress_time);     
-
-      /*
-      Serial.print(inStr[i]);
-      Serial.print(", ");
-      Serial.print(Desired_Keys[enc_index]);
-      Serial.print(", ");
-      Serial.print(Modifier_Keys[enc_index]);
-      Serial.print(", ");
-      Serial.print(Used_Keys[enc_index]);
-      Serial.print(", ");
-      Serial.print("\n");
-      */
-      
-    }
-    else // if the standard/normal key can be pressed
-    {
-      PressAndWait(inStr[i]); 
-    }
-    releaseAll();
-  }
-}
-
-int Keyboard_::GetKeyIndex(byte c, byte* char_array)           // find and the position of the value in the array
-{
-  for(byte i=0;i<strlen(char_array);i++)
-  {
-    if(c == char_array[i])
-    {
-      return i;
-    }
-  }
-  return 256;
-}
-
-void Keyboard_::PressRelease(char c, byte timeDelay)
-{
-  press(c);
-  delay(timeDelay);
-  release(c);
-}
-
-
-/*
-Exceptions are the letters that require different button being pressed in different lang settings 
-(so if letter == exception then use alt+numpad method, otherwise use the normal typing because it's faster to press 1 instead of 4 buttons) 
-these exceptions are listed to make the typing process faster because using alt+numpad method for all the characters appears to be too slow
-
-german - yz
-french - qamwz
-dutch - qamwz
-turkish - i
-azerbaijani - totally uncompatible
-*/
-
-
-bool Keyboard_::IsException(char c)                    // check whether this character is one of these that have to be typed differently using other language settings
-{
-  for(byte i=0; i<EXCEPTIONS_SIZE; i++)
-  {
-    if(c == exceptions[i])
-    {
-      return true;
-    }
-  }
-  return false;
-}
-
-
-bool Keyboard_::IsModifier(char c)                   // is key like shift, alt, "GUI" key, etc.
-{
-  byte b = (byte)c;
-  if((b >= 128 && b <=135) || (b >= 176 && b <=179) || (b >= 193 && b <=205) || (b >= 209 && b <=218))
-  {
-    return true;
-  }
-  return false;
-}
-
-
-bool Keyboard_::WasEncodingPreviouslySaved(){
- 
-  int num = 0;                                                     //this has to be changed to int and saved elsewhere in the EEPROM, it has to be certain value so it won't give false positives
-  EEPROM.get(EEPROM_ADDRESS_ENCODING_AVAILABLE, num);
-
-  dbg(F("Keyboard_::WasEncodingPreviouslySaved, num = "), String(num)); 
- 
-  return num == EEPROM_SAVED_ENCODING_AVAILABLE_ID;
-}
-
-void Keyboard_::LoadEncoding(){
-  for(byte i=0;i<3; i++) {
-    for(byte offset=0; offset<ENCODING_SIZE; offset++) {
-      EEPROM.get(offset+1+(ENCODING_SIZE*i), Encoding[i][offset]);            //+1 because the 0 address holds trigger bool for tricky activation method
-    }
-  }
-  EEPROM.get(EEPROM_STARTING_ADDRESS_ENCODING_NAME, encoding_name);
-  
-  dbg(F("Keyboard_::LoadEncoding, encoding_name = "), String(encoding_name)); 
-}
-
-void Keyboard_::UseAltCodes(bool decision){ 
-  use_alt_codes = decision; 
-  EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, use_alt_codes);
-
-  dbg(F("Keyboard_::UseAltCodes, use_alt_codes = "), String(use_alt_codes)); 
-}
- 
-void Keyboard_::LoadAltCodesUseState() {
-  EEPROM.get(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, use_alt_codes);
-
-  dbg(F("Keyboard_::LoadAltCodesUseState, use_alt_codes = "), String(use_alt_codes)); 
-}
-
-/* previous functions */
-/*
-void SavedMultiLangMethodWindowsCheck()                   // check whether the MultiLang method was used before the device turned off last time (access EEPROM by using function "EEPROM.get(address, my_var);")
-{
-  EEPROM.get(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, useMultiLangWindowsMethod);                //read from EEPROM (persistent memory of ATMEGA 32U4) to see whether it should use MultiLang method
-}
-
-void SavedEncodingAvailabilityCheck()                               //rewrites the default US encoding with the one which was used last time and saved to EEPROM
-{
-  int numCheck = 0;                                                     //this has to be changed to int and saved elsewhere in the EEPROM, it has to be certain value so it won't give false positives
-  EEPROM.get(EEPROM_ADDRESS_ENCODING_AVAILABLE, numCheck);
-  if(numCheck == EEPROM_SAVED_ENCODING_AVAILABLE_ID)
-  {
-    for(byte i=0;i<3; i++)
-    {
-      for(byte offset=0; offset<ENCODING_SIZE; offset++)
-      {
-        EEPROM.get(offset+1+(ENCODING_SIZE*i), Encoding[i][offset]);            //+1 because the 0 address holds trigger bool for tricky activation method
-      }
-
-    }
-
-    EEPROM.get(EEPROM_STARTING_ADDRESS_ENCODING_NAME, encodingName);
-  }
-  else
-  {
-
-  }
-}
-
-*/
-
-char * Keyboard_::GetEncodingName(){
-  return encoding_name;
-}
-
-void Keyboard_::SetEncodingName(char * name_){
-  strcpy(encoding_name, name_); 
-  EEPROM.put(EEPROM_STARTING_ADDRESS_ENCODING_NAME, encoding_name); 
-}
-
-void Keyboard_::SetEncoding(int segment_index, char * enc_str){
-  for(byte offset = 0; offset < strlen(enc_str); offset += 2)
-  {
-    byte strValBuff[3]={enc_str[offset], enc_str[offset + 1],'\0'}; 
-
-    Encoding[segment_index][offset / 2] = (byte)strtoul((char*)strtok(strValBuff, " "), NULL, 16);               //(((byte)inStr[offset]) * 16) + (byte)inStr[offset+1];         
-
-  }  
-
-  //save to EEPROM
-  for(byte offset=0; offset<ENCODING_SIZE; offset++)
-  {
-    Encoding[segment_index][offset] = ((offset < (strlen(enc_str) / 2)) ? Encoding[segment_index][offset] : 0);
-    EEPROM.put(offset + 1 + (ENCODING_SIZE * segment_index), Encoding[segment_index][offset]);                    //+1 because the 0 address holds trigger bool for tricky activation method
-  }
-
-  EEPROM.put(EEPROM_ADDRESS_ENCODING_AVAILABLE, EEPROM_SAVED_ENCODING_AVAILABLE_ID);
-}
-
-
-
-
-
-bool Keyboard_::IsItTimeTo_ReleaseAltTab(){
-  return (last_alt_tab_time > 0 && (millis() - last_alt_tab_time > ALT_TAB_AUTORELEASE));
-}
-
-void Keyboard_::ReleaseAltTab(){ 
-  last_alt_tab_time =  0;
-  release(KEY_TAB);       // TODO: see if glitches occur, it used to be "Keyboard.releaseAll();" (as far as I remember it prevented glitch)
-    
-  release(KEY_LEFT_ALT);
-
-}
-
-void Keyboard_::AltTabOnce(){
-  if(last_alt_tab_time == 0){
-    PressAndWait(KEY_LEFT_ALT);
-  }
-  PressAndWait(KEY_TAB);
-  release(KEY_TAB);
-  last_alt_tab_time = millis();
-}
-
-
-
-/*  //Not needed but may stay
-void Keyboard_::TypeKey(int key) {
-  Keyboard.press(key);
-  delay(keypress_time);
-  Keyboard.release(key);
-}
-
-void Keyboard_::OpenRun() {
-  Keyboard.press(KEY_LEFT_GUI);
-  delay(200);
-  Keyboard.press('r');
-  delay(200);
-  Keyboard.releaseAll();
-  delay(700);
-}
-
-void Keyboard_::OpenCmd() {
-  OpenRun();  
-  Keyboard.Print("cmd");
-  TypeKey(KEY_RETURN); 
-}
-
-void Keyboard_::EnterCommand(char *text) {
-  Keyboard.Print(text);
-  delay(10);
-  TypeKey(KEY_RETURN);  
-}
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Keyboard_ Keyboard;
 
