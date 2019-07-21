@@ -54,5 +54,7 @@ public:
   #include "wm_HC_Bluetooth.h"
 #endif
 
+extern WirelessModule *wireless_module;
+
 
 #endif

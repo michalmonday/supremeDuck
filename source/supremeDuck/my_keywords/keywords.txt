@@ -5,7 +5,7 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-Funcs	KEYWORD1
+Protocol		KEYWORD1
 WirelessModule		KEYWORD1
 Esp8266		KEYWORD1
 JDY		KEYWORD1
@@ -16,6 +16,7 @@ ser		KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+Check	KEYWORD2
 IsItTimeTo_ReleaseAltTab	KEYWORD2
 ReleaseAltTab	KEYWORD2
 AltTabOnce	KEYWORD2
@@ -120,4 +121,5 @@ APP_Version	LITERAL1
 ###################
 # File: Funcs.cpp
 DBG_PREFIX	LITERAL1
+DBG_SUFFIX	LITERAL1
 

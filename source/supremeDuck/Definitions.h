@@ -1,6 +1,11 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+#define APP_Version "1.26"                            // It is used to compare it with the mobile app version.
+                                                     // For example: 1.08 is compatible with 1.081 or 1.83148, 
+                                                     // but it's not compatible with 1.09 or 1.091319 
+                                                     // (in such case notification will be displayed in the app)
+
 /* 
 
         Wireless Module Choice 

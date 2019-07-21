@@ -87,11 +87,12 @@ void Esp8266::EnterProgrammingMode(){
   // If the BLE version is used then it allows sending AT commands through "Tools -> Serial Monitor"
 
   dbg(F("Esp8266::EnterProgrammingMode"));
+  delay(200);
   
   pinMode(WIFI_DUCKY_GPIO_0_CONTROL_PIN, OUTPUT);
   pinMode(WIFI_DUCKY_ENABLE_CONTROL_PIN, OUTPUT);
 
-  #if !defined(LOG_SERIAL) && !defined(DEBUG)   // if LOG_SERIAL and DEBUG were not defined then Serial.begin was not called yet
+  #ifndef DEBUG   // if DEBUG was not defined then Serial.begin was not called yet
     Serial.begin(115200);
   #endif
   

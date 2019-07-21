@@ -21,8 +21,9 @@ void WirelessModule::Send(char * str){
 
 void WirelessModule::EnterProgrammingMode(){
   dbg(F("WirelessModule::EnterProgrammingMode"));
+  delay(200);
   
-  #if !defined(LOG_SERIAL) && !defined(DEBUG)   // if LOG_SERIAL and DEBUG were not defined then Serial.begin was not called yet
+  #ifndef DEBUG   // if DEBUG was not defined then Serial.begin was not called yet
     Serial.begin(115200);
   #endif
   
@@ -86,3 +87,5 @@ void WirelessModule::ChangeNameAndPasswordIfRequested(){
     }
   }  
 }
+
+WirelessModule *wireless_module;
