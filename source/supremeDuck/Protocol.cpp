@@ -12,7 +12,7 @@
 
 void ExtractDeliveredText(char *str, byte ignoredStartingChars);
 
-void SetNewCharEncoding(char *str);
+char GetEncodingSegmentIndex(char c);
 
 ProtocolFunc protocol[] = {
 
@@ -59,8 +59,16 @@ ProtocolFunc protocol[] = {
 
    {"VER", false, [](char * str){
       char data[13];
-      sprintf(data,"ver=%s,end", APP_Version);          //format string
+      sprintf(data,"ver=%s,end", APP_VERSION);          //format string
       wireless_module->ser->write(data);    
+   }},
+
+   {"ds_begin", false, [](char * str){
+      Keyboard.SetDefaultDelay(0);
+   }},
+
+   {"ds_end", false, [](char * str){
+      Keyboard.SetDefaultDelay(0);
    }},
 
    /* 
@@ -70,13 +78,11 @@ ProtocolFunc protocol[] = {
    */
 
    {"PT:", true, [](char * str){
-      ExtractDeliveredText(str, 3);
       Keyboard.Print(str);
       delay(Keyboard.GetDefaultDelay());
    }},
 
    {"TE:", true, [](char * str){
-      ExtractDeliveredText(str, 3);
       Keyboard.Print(str);
       delay(Keyboard.GetKeypressTime());
       Keyboard.PressAndWait(KEY_RETURN);
@@ -84,7 +90,6 @@ ProtocolFunc protocol[] = {
    }},
 
    {"ML:", true, [](char * str){
-      ExtractDeliveredText(str, 3);
       if(!strcmp(str,"Enabled")){
         Keyboard.UseAltCodes(true);
       }
@@ -92,137 +97,8 @@ ProtocolFunc protocol[] = {
         Keyboard.UseAltCodes(false);
       }
    }},
-
-   {"ENC,", true, [](char * str){
-      SetNewCharEncoding(str);
-   }},
-
-   {"PDK_HC:", true, [](char * str){
-      ExtractDeliveredText(str, 7);
-      str[4] = 0;
-      Keyboard.PressAndWait(HexToChar(str));
-      Keyboard.PressAndWait(str[3]);
-      Keyboard.releaseAll(); 
-      delay(Keyboard.GetDefaultDelay());
-   }},
-
-   {"PDK_HH", true, [](char * str){
-      ExtractDeliveredText(str, 7);        
-      int key_1;
-      int key_2;
-      sscanf(str, "%X,%X", &key_1, &key_2);   
-      Keyboard.PressAndWait(key_1);
-      Keyboard.PressAndWait(key_2);
-      Keyboard.releaseAll();  
-      delay(Keyboard.GetDefaultDelay());
-   }},
-
-   {"PTK_HHC", true, [](char * str){
-      int key[3];
-      sscanf(str, "%*[^:]:%X,%X,%c", &key[0], &key[1], &key[2]);
-      for(int i = 0; i < 3; ++i){
-        Keyboard.PressAndWait(key[i]);     
-      }
-      Keyboard.releaseAll();  
-      delay(Keyboard.GetDefaultDelay());
-   }},
-
-   {"PK:", true, [](char * str){
-      ExtractDeliveredText(str, 3);
-      str[1] = 0;
-      Keyboard.Print(str[0]);
-      delay(Keyboard.GetDefaultDelay());
-   }},
-
-   {"PKH:", true, [](char * str){
-      ExtractDeliveredText(str, 4);
-      char key[2] = {HexToChar(str), '\0'};
-      Keyboard.Print(key);  
-      delay(Keyboard.GetDefaultDelay()); 
-   }},
-
-   {"DELAY:", true, [](char * str){
-      int val;
-      sscanf(str, "%*[^:]:%d", &val);
-      delay(val);    
-      delay(Keyboard.GetDefaultDelay());
-   }},
-
    
-   {"DEFAULTDELAY:", true, [](char * str){
-      int d = 0;
-      sscanf(str, "%*[^:]:%d", &d); 
-      Keyboard.SetDefaultDelay(d);
-      delay(d);
-   }},
-   {"DEFAULT_DELAY:", true, [](char * str){int d = 0; sscanf(str, "%*[^:]:%d", &d);  Keyboard.SetDefaultDelay(d); delay(d); }},
-
-   {"ds_begin", true, [](char * str){
-      Keyboard.SetDefaultDelay(0);
-   }},
-
-   {"ds_end", true, [](char * str){
-      Keyboard.SetDefaultDelay(0);
-   }},
-
-   {"CBN:", true, [](char * str){
-      ExtractDeliveredText(str, 4);
-      char bluetoothName[BLUETOOTH_NAME_SIZE] = {0};
-      sprintf(bluetoothName, "%s\0", str);
-      
-      EEPROM.put(EEPROM_ADDRESS_BLUETOOTH_NAME, bluetoothName); 
-      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, EEPROM_CHANGE_REQUESTED_ID);   
-   }},
-
-   {"CBP:", true, [](char * str){
-      ExtractDeliveredText(str, 4);
-      char pin[5] = {0};
-      sprintf(pin, "%s\0", str);
-      
-      EEPROM.put(EEPROM_ADDRESS_BLUETOOTH_PIN, pin); 
-      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, EEPROM_CHANGE_REQUESTED_ID);   
-   }},
-
-   {"CBLEN:", true, [](char * str){
-      ExtractDeliveredText(str, 6);
-      char bleName[BLE_NAME_SIZE] = {0};
-      sprintf(bleName, "%s\0", str);
-      
-      EEPROM.put(EEPROM_ADDRESS_BLE_NAME, bleName); 
-      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, EEPROM_CHANGE_REQUESTED_ID);   
-   }},
-
-   {"CBLEP:", true, [](char * str){
-      ExtractDeliveredText(str, 6);
-      char pin[7] = {0};
-      sprintf(pin, "%s\0", str);
-      
-      EEPROM.put(EEPROM_ADDRESS_BLE_PIN, pin); 
-      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE, EEPROM_CHANGE_REQUESTED_ID);   
-   }},
-
-};
-
-
-void ExtractDeliveredText(char *str, byte ignoredStartingChars)             //gets rid of the first few chars (e.g. "YT:") and the ",end" (it assumes that every message received ends with ",end", if the message would end like ",ending" the function won't work properly without adding additional parameter, somthing like: "byte ignoredEndingChars")
-{
-  byte len = SubStrIndex(str, ",end") - ignoredStartingChars;      
-   
-  for(byte i=0;i<=len;i++)
-  {
-    str[i] = str[i+ignoredStartingChars];
-    if(i == len)
-    {
-      str[i] = '\0';
-    }
-  }
-}
-
-void SetNewCharEncoding(char *str){
-  byte segment_index = 255;             // arbitrary high/invalid value
-  switch (str[4])                       //5th letter is D, U or M depending on the type of 3 encoding segments
-  {
-    /*
+   /*
      * the encoding data is large so the app sends the data in 4 steps, first sends the desired characters, the ones that the user wants to type (marked by the letter "D")
      * then it sends the used characters, the ones that have to be "pressed" in order to type the desired characters while using a specific language settings (these "Used characters" are marked by the letter "U")
      * then it sends the modifier keys, they are used to know whether some shift or alt has to be pressed together with the "Used char" to achieve "Desired char" being typed on the target PC  
@@ -237,41 +113,122 @@ void SetNewCharEncoding(char *str){
      * ENC,N:HypotheticalJapanese - hj,end
      * 
      * The above example would send the data required for 1 char, the implementation of this system sends no more than 78 bytes/chars at once.
-     */
-    case 'D': 
-      {
-        segment_index = 0;
-      }     
-      break;
-      
-    case 'U':
-      {
-        segment_index = 1;  
+   */
+   {"ENC,", true, [](char * str){
+      if(str[0] == 'N'){
+        Keyboard.SetEncodingName(str + 2);
+      }else{
+        char segment_index = GetEncodingSegmentIndex(str[0]);
+        if(segment_index >= 0){
+          Keyboard.SetEncoding(segment_index, str + 2);
+        }
       }
-      break;
-    case 'M':
-      {
-        segment_index = 2; 
-      }
-      break;
-    case 'N':
-      {
-        ExtractDeliveredText(str, 6);
-        Keyboard.SetEncodingName(str);
-        return;
-      }
-      break;
-    default:
-      {
-        dbg(F("Incorrect encoding segment_index. String(str[4]) = "), String(str[4]));
-        return;
-      }
-      break;
-  }   
+   }},
 
-  ExtractDeliveredText(str, 6); 
-  Keyboard.SetEncoding(segment_index, str);
+   {"PDK_HC:", true, [](char * str){
+      str[4] = 0;
+      Keyboard.PressAndWait(HexToChar(str));
+      Keyboard.PressAndWait(str[3]);
+      Keyboard.releaseAll(); 
+      delay(Keyboard.GetDefaultDelay());
+   }},
+
+   {"PDK_HH:", true, [](char * str){       
+      int key_1;
+      int key_2;
+      sscanf(str, "%X,%X", &key_1, &key_2);   
+      Keyboard.PressAndWait(key_1);
+      Keyboard.PressAndWait(key_2);
+      Keyboard.releaseAll();  
+      delay(Keyboard.GetDefaultDelay());
+   }},
+
+   {"PTK_HHC:", true, [](char * str){
+      int key[3];
+      sscanf(str, "%X,%X,%c", &key[0], &key[1], &key[2]);
+      for(int i = 0; i < 3; ++i){
+        Keyboard.PressAndWait(key[i]);     
+      }
+      Keyboard.releaseAll();  
+      delay(Keyboard.GetDefaultDelay());
+   }},
+
+   {"PK:", true, [](char * str){
+      str[1] = 0;
+      Keyboard.Print(str[0]);
+      delay(Keyboard.GetDefaultDelay());
+   }},
+
+   {"PKH:", true, [](char * str){
+      char key[2] = {HexToChar(str), '\0'};
+      Keyboard.Print(key);  
+      delay(Keyboard.GetDefaultDelay()); 
+   }},
+
+   {"DELAY:", true, [](char * str){
+      int val;
+      sscanf(str, "%d", &val);
+      delay(val);    
+      delay(Keyboard.GetDefaultDelay());
+   }},
+
+   
+   {"DEFAULTDELAY:", true, [](char * str){
+      int d = 0;
+      sscanf(str, "%d", &d); 
+      Keyboard.SetDefaultDelay(d);
+      delay(d);
+   }},
+   {"DEFAULT_DELAY:", true, [](char * str){int d = 0; sscanf(str, "%d", &d);  Keyboard.SetDefaultDelay(d); delay(d); }},
+
+   {"CBN:", true, [](char * str){
+      char bluetoothName[BLUETOOTH_NAME_SIZE] = {0};
+      sprintf(bluetoothName, "%s\0", str);
+      
+      EEPROM.put(EEPROM_ADDRESS_BLUETOOTH_NAME, bluetoothName); 
+      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, EEPROM_CHANGE_REQUESTED_ID);   
+   }},
+
+   {"CBP:", true, [](char * str){
+      char pin[5] = {0};
+      sprintf(pin, "%s\0", str);
+      
+      EEPROM.put(EEPROM_ADDRESS_BLUETOOTH_PIN, pin); 
+      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, EEPROM_CHANGE_REQUESTED_ID);   
+   }},
+
+   {"CBLEN:", true, [](char * str){
+      char bleName[BLE_NAME_SIZE] = {0};
+      sprintf(bleName, "%s\0", str);
+      
+      EEPROM.put(EEPROM_ADDRESS_BLE_NAME, bleName); 
+      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, EEPROM_CHANGE_REQUESTED_ID);   
+   }},
+
+   {"CBLEP:", true, [](char * str){
+      char pin[7] = {0};
+      sprintf(pin, "%s\0", str);
+      
+      EEPROM.put(EEPROM_ADDRESS_BLE_PIN, pin); 
+      EEPROM.put(EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE, EEPROM_CHANGE_REQUESTED_ID);   
+   }},
+
+};
+
+char GetEncodingSegmentIndex(char c){
+  const char * segments_ids = "DUM";
+  for (char i = 0; i < strlen(segments_ids); ++i){
+    dbgf(F("GetEncodingSegmentIndex - segments_ids[i] = %c, c = %c"), segments_ids[i], c);
+    if (segments_ids[i] == c){
+      return i;
+    }
+  }
+  
+  dbgf(F("GetEncodingSegmentIndex - Incorrect encoding segment_index. c = %c (ERROR)"), c);
+  delay(500);
+  return -1;
 }
+
 
 namespace Protocol {
   int protocol_size = sizeof(protocol) / sizeof(ProtocolFunc);
@@ -279,14 +236,25 @@ namespace Protocol {
   void Check(char *str){
     for(short i = 0; i < protocol_size; ++i){
       ProtocolFunc *p = &protocol[i];
+      
       if(!p->has_ending && !strcmp(str, p->begining)){
           protocol[i].func(str);  
-      } else if (IsCmd(str, p->begining)){      
-          protocol[i].func(str);
-      }else {
+          
+      } else if (IsCmd(str, p->begining)){    
+          if(char * end_ptr = strstr(str, ",end")){
+            *end_ptr = '\0'; 
+            protocol[i].func(str + strlen(p->begining));
+          }else{
+            dbg(F("Protocol::Check - The ',end' wasn't found in the command. (ERROR)")); 
+            delay(500);
+            dbgf(F("Protocol::Check - str = %s"), str);
+          }    
+          
+      }else {       
         continue;
       }
-      dbg(F("Protocol::Check, executed func = "), p->begining);
+      
+      dbgf(F("Protocol::Check - p->begining of executed ProtocolFunc = %s"), p->begining);
     }
   }
 }

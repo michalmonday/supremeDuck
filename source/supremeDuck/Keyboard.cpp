@@ -527,7 +527,7 @@ bool Keyboard_::WasEncodingPreviouslySaved(){
   int num = 0;                                                     //this has to be changed to int and saved elsewhere in the EEPROM, it has to be certain value so it won't give false positives
   EEPROM.get(EEPROM_ADDRESS_ENCODING_AVAILABLE, num);
 
-  dbg(F("Keyboard_::WasEncodingPreviouslySaved, num = "), String(num)); 
+  dbgf(F("Keyboard_::WasEncodingPreviouslySaved - num = %d"), num); 
  
   return num == EEPROM_SAVED_ENCODING_AVAILABLE_ID;
 }
@@ -540,20 +540,20 @@ void Keyboard_::LoadEncoding(){
   }
   EEPROM.get(EEPROM_STARTING_ADDRESS_ENCODING_NAME, encoding_name);
   
-  dbg(F("Keyboard_::LoadEncoding, encoding_name = "), String(encoding_name)); 
+  dbgf(F("Keyboard_::LoadEncoding - encoding_name = %s"), encoding_name); 
 }
 
 void Keyboard_::UseAltCodes(bool decision){ 
   use_alt_codes = decision; 
   EEPROM.put(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, use_alt_codes);
 
-  dbg(F("Keyboard_::UseAltCodes, use_alt_codes = "), String(use_alt_codes)); 
+  dbgf(F("Keyboard_::UseAltCodes - use_alt_codes = %d"), use_alt_codes); 
 }
  
 void Keyboard_::LoadAltCodesUseState() {
   EEPROM.get(EEPROM_ADDRESS_USE_MULTI_LANG_METHOD_WINDOWS, use_alt_codes);
 
-  dbg(F("Keyboard_::LoadAltCodesUseState, use_alt_codes = "), String(use_alt_codes)); 
+  dbgf(F("Keyboard_::LoadAltCodesUseState - use_alt_codes = %d"), use_alt_codes); 
 }
 
 /* previous functions */

@@ -21,6 +21,7 @@ IsItTimeTo_ReleaseAltTab	KEYWORD2
 ReleaseAltTab	KEYWORD2
 AltTabOnce	KEYWORD2
 dbg	KEYWORD2
+dbgf	KEYWORD2
 Receive	KEYWORD2
 EnterProgrammingMode	KEYWORD2
 Handshake	KEYWORD2
@@ -116,7 +117,7 @@ EXCEPTIONS_SIZE	LITERAL1
 
 ###################
 # File: supremeDuck.ino
-APP_Version	LITERAL1
+APP_VERSION	LITERAL1
 
 ###################
 # File: Funcs.cpp

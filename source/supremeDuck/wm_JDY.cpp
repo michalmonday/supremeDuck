@@ -13,7 +13,7 @@ bool JDY::WasNameChangeRequested(){
   int num = 0;
   EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLE_NAME_CHANGE, num);
 
-  dbg(F("JDY::WasNameChangeRequested, num = "), String(num));
+  dbgf(F("JDY::WasNameChangeRequested - num = %d"), num);
   
   return num == EEPROM_CHANGE_REQUESTED_ID;
 }
@@ -27,7 +27,7 @@ bool JDY::WasPasswordChangeRequested(){
   int num;
   EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLE_PIN_CHANGE, num);
 
-  dbg(F("JDY::WasPasswordChangeRequested, num = "), String(num));
+  dbgf(F("JDY::WasPasswordChangeRequested - num = %d"), num);
   
   return num == EEPROM_CHANGE_REQUESTED_ID;
 }
@@ -51,14 +51,14 @@ void JDY::ChangeName(){
   
   ser->print(at_cmd);
 
-  dbg(F("JDY::ChangeName, at_cmd = "), at_cmd);
+  dbgf(F("JDY::ChangeName - at_cmd = %s"), at_cmd);
   
   delay(1000);
 
   if(ser->available()){
-    dbg(F("JDY::ChangeName, at_cmd response = "), ser->readString());
+    dbgf(F("JDY::ChangeName - at_cmd response = %s"), ser->readString().c_str());
   }else {
-    dbg(F("JDY::ChangeName, at_cmd response not received."));
+    dbg(F("JDY::ChangeName - at_cmd response not received."));
   }
   
   while(ser->available()){char c = ser->read();}
@@ -74,9 +74,9 @@ void JDY::ChangePassword(){
   delay(1000);
 
   if(ser->available()){ 
-    dbg(F("JDY::ChangePassword, AT+ISCEN1 (enable pin) was sent to BLE module, response = "), ser->readString()); 
+    dbgf(F("JDY::ChangePassword - AT+ISCEN1 (enable pin) was sent to BLE module, response = %s"), ser->readString().c_str()); 
   } else {
-    dbg(F("JDY::ChangePassword, AT+ISCEN1 (enable pin) was sent to BLE module, response not received"));
+    dbg(F("JDY::ChangePassword - AT+ISCEN1 (enable pin) was sent to BLE module, response not received"));
   }
   
   while(ser->available()){char c = ser->read();}
@@ -94,14 +94,14 @@ void JDY::ChangePassword(){
   delay(700);
   ser->print(at_cmd);
 
-  dbg(F("JDY::ChangePassword, at_cmd = "), at_cmd);
+  dbgf(F("JDY::ChangePassword - at_cmd = %s"), at_cmd);
   
   delay(1000);
   
   if(ser->available()){
-    dbg(F("JDY::ChangePassword, at_cmd response = "), ser->readString());
+    dbgf(F("JDY::ChangePassword - at_cmd response = %s"), ser->readString().c_str());
   }else {
-    dbg(F("JDY::ChangePassword, at_cmd response not received."));
+    dbg(F("JDY::ChangePassword - at_cmd response not received."));
   }
   while(ser->available()){char c = ser->read();}
 }

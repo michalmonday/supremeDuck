@@ -2,26 +2,6 @@
 #include "Definitions.h"
 #include <Arduino.h>
 
-#ifdef DEBUG
-
-  unsigned long last_debug_line = 0;
-
-  // prepend "DEBUG" and append time since last debug message
-  #define DBG_PREFIX Serial.print(F("DEBUG: "))
-  #define DBG_SUFFIX Serial.println(" (" + String(millis() - last_debug_line) + "ms)"); last_debug_line = millis()
-  
-  void dbg(char * s){ DBG_PREFIX;  Serial.print(s); DBG_SUFFIX; }
-  void dbg(String s){ DBG_PREFIX; Serial.print(s); DBG_SUFFIX;}
-  void dbg(const __FlashStringHelper *ifsh){ DBG_PREFIX; Serial.print(ifsh); DBG_SUFFIX; }
-  void dbg(const __FlashStringHelper *ifsh, String s){ DBG_PREFIX; Serial.print(ifsh); Serial.print(s); DBG_SUFFIX; }
-  void dbg(const __FlashStringHelper *ifsh, char * s){ DBG_PREFIX; Serial.print(ifsh); Serial.print(s); DBG_SUFFIX; } 
-#else
-  // nothing here but in Definitions.h there is: #define dbg(...) 0
-  // this way every dbg() will be replaced with zero which does nothing
-  // so no additional memory will be occupied when DEBUG is undefined
-#endif
-
-
 // blocking
 void BlinkLED(int blinks_count, int blink_length){
   for(byte i = 0; i < blinks_count; ++i){

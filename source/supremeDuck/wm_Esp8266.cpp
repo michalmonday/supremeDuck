@@ -16,7 +16,7 @@ Esp8266::Esp8266(){
 
 
 void Esp8266::SetEspMode(int mode){
-  dbg(F("Esp8266::SetEspMode, mode = "), String(mode));
+  dbgf(F("Esp8266::SetEspMode - mode = %d"), mode);
   
   digitalWrite(WIFI_DUCKY_ENABLE_CONTROL_PIN, LOW); // set it low first to reset the Esp-12F
   delay(200);
@@ -58,10 +58,10 @@ to make sure that in the bug-occuring circumstances the reset method will actual
     if(ser->available()){
       if(ser->readString().equals("im_ok")){
         esp_runs_code = true;
-        dbg(F("Esp runs"));
+        dbg(F("Esp8266::Handshake - Successful"));
       }
     }else{
-      dbg(F("Esp didn't respond, resetting."));
+      dbg(F("Esp8266::Handshake - Esp didn't respond, resetting."));
     }
 
     if(!esp_runs_code){

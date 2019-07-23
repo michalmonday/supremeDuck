@@ -9,7 +9,7 @@ bool HC_Bluetooth::WasNameChangeRequested(){
   int num = 0;
   EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_NAME_CHANGE, num);
 
-  dbg(F("HC_Bluetooth::WasNameChangeRequested, num = "), String(num));
+  dbgf(F("HC_Bluetooth::WasNameChangeRequested - num = %d"), num);
   
   return num == EEPROM_CHANGE_REQUESTED_ID;
 }
@@ -23,7 +23,7 @@ bool HC_Bluetooth::WasPasswordChangeRequested(){
   int num;
   EEPROM.get(EEPROM_ADDRESS_REQUESTED_BLUETOOTH_PIN_CHANGE, num);
   
-  dbg(F("HC_Bluetooth::WasPasswordChangeRequested, num = "), String(num));
+  dbgf(F("HC_Bluetooth::WasPasswordChangeRequested - num = %d"), num);
   return num == EEPROM_CHANGE_REQUESTED_ID;
 }
 
@@ -41,11 +41,11 @@ void HC_Bluetooth::ChangeName(){
 
   ser->print(at_cmd);
 
-  dbg(F("HC_Bluetooth::ChangeName, at_cmd = "), at_cmd);
+  dbgf(F("HC_Bluetooth::ChangeName - at_cmd = %s"), at_cmd);
   
   delay(1000);
   if(ser->available()){
-    dbg(F("HC_Bluetooth::ChangeName, at_cmd response = "), ser->readString());
+    dbgf(F("HC_Bluetooth::ChangeName - at_cmd response = %s"), ser->readString().c_str());
   }
   
   while(ser->available()){char c = ser->read();}
@@ -59,12 +59,12 @@ void HC_Bluetooth::ChangePassword(){
   delay(700);
   ser->print(at_cmd);
 
-  dbg(F("HC_Bluetooth::ChangePassword, at_cmd = "), at_cmd);
+  dbgf(F("HC_Bluetooth::ChangePassword - at_cmd = %s"), at_cmd);
 
   delay(1000);
   
   if(ser->available()){
-    dbg(F("HC_Bluetooth::ChangePassword, at_cmd response = "), ser->readString());
+    dbgf(F("HC_Bluetooth::ChangePassword - at_cmd response = %s"), ser->readString().c_str());
   }
   
   while(ser->available()){char c = ser->read();}

@@ -4,7 +4,7 @@
 WirelessModule::WirelessModule(){
   ser = WIRELESS_MODULE_SERIAL;   // Either HarwareSerial (which is Serial1) or SoftwareSerial(9,8)
   ser->begin(MODULE_BAUDRATE);
-  dbg(F("WirelessModule::WirelessModule, MODULE_BAUDRATE = "), String(MODULE_BAUDRATE));
+  dbgf(F("WirelessModule::WirelessModule - MODULE_BAUDRATE = %ld"), (long)MODULE_BAUDRATE);
 }
 
 void WirelessModule::Handshake(){ 
@@ -16,7 +16,7 @@ void WirelessModule::Handshake(){
 
 void WirelessModule::Send(char * str){
   ser->print(str);
-  dbg(F("WirelessModule::Send, str = "), str);
+  dbgf(F("WirelessModule::Send - str = %s"), str);
 } 
 
 void WirelessModule::EnterProgrammingMode(){
