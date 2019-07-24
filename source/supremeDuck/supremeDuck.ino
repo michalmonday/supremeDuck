@@ -18,9 +18,6 @@ Last edited: 23/07/2019
                                                    that will prevail even when the device is disconnected from power. */                                         
 
 
-
-void SetNewCharEncoding(char *str);
-
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {     
   #ifdef DEBUG
