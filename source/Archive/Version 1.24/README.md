@@ -1,0 +1,1 @@
+Stable version before refactoring of Arduino code
