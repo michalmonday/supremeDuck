@@ -91,10 +91,6 @@ void Esp8266::EnterProgrammingMode(){
   
   pinMode(WIFI_DUCKY_GPIO_0_CONTROL_PIN, OUTPUT);
   pinMode(WIFI_DUCKY_ENABLE_CONTROL_PIN, OUTPUT);
-
-  #ifndef DEBUG   // if DEBUG was not defined then Serial.begin was not called yet
-    Serial.begin(115200);
-  #endif
   
   SetEspMode(ESP_MODE_PROGRAMMING);
 

@@ -2,7 +2,7 @@
 supremeDuck project - https://github.com/michalmonday/supremeDuck
 Created by Michal Borowski
 
-Last edited: 23/07/2019
+Last edited: 28/07/2019
 */
 
 // The choice of Wifi/Bluetooth/BLE version was moved to Definitions.h
@@ -20,9 +20,11 @@ Last edited: 23/07/2019
 
 void setup()                                    // setup function is a part of every Arduino sketch, it gets called once at the begining
 {     
-  #ifdef DEBUG
-    Serial.begin(115200);                       // begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
-  #endif
+  Serial.begin(115200);                       /* begin serial communication so it's possible to use "Tools -> Serial Monitor" to see the debugging output
+                                                 it also allows to receive data from PC through command prompt like:
+                                                 echo something > \\.\COM6
+                                                 Where the name of the com port can be received by using:
+                                                 powershell "( Get-WmiObject Win32_SerialPort | Where { $_.Description -like '*Arduino Leonardo*' } | select -first 1 ).DeviceID"  */
 
   #ifdef WAIT_FOR_SERIAL_MONITOR_TO_OPEN
     while(!Serial){;}                           // this "!Serial" check works only on Arduino Pro Mirco / Leonardo
@@ -91,6 +93,15 @@ void loop()                                   // loop function is also a part of
                                                           "OK, I already typed the last line/key you've sent me, so you can send the next one", 
                                                           otherwise there would have to be a bigger delay */
   }
+
+  if(Serial.available()){
+    wireless_module->Send("exfil:");
+    while(Serial.available()){
+      wireless_module->Write(Serial.read());
+    }    
+    wireless_module->Send(",end");
+  }
+
 
   if(Keyboard.IsItTimeTo_ReleaseAltTab()){ 
     Keyboard.ReleaseAltTab();

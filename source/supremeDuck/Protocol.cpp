@@ -27,7 +27,7 @@ ProtocolFunc protocol[] = {
       
       String operating_system;
       FingerprintUSBHost.guessHostOS(operating_system);
-      sprintf(data,"data=%i,%s,%s,end", Keyboard.IsUsingAltCodes(), Keyboard.GetEncodingName(), operating_system.c_str());           //format string
+      sprintf(data,"settings:%i,%s,%s,end", Keyboard.IsUsingAltCodes(), Keyboard.GetEncodingName(), operating_system.c_str());           //format string
       wireless_module->Send(data); // send the data to the mobile app or any other bluetooth device that is connected to it right now    
     }},
 
@@ -59,7 +59,7 @@ ProtocolFunc protocol[] = {
 
    {"VER", false, [](char * str){
       char data[13];
-      sprintf(data,"ver=%s,end", APP_VERSION);          //format string
+      sprintf(data,"ver:%s,end", APP_VERSION);          //format string
       wireless_module->ser->write(data);    
    }},
 

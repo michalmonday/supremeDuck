@@ -39,6 +39,7 @@ public:
   virtual void ResetPasswordChangeRequestFlag() = 0;
 
   void Send(char * str);
+  void Write(char c);
   
 
   bool mouse_move_flag = false;

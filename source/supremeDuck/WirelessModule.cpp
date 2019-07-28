@@ -19,13 +19,14 @@ void WirelessModule::Send(char * str){
   dbgf(F("WirelessModule::Send - str = %s"), str);
 } 
 
+void WirelessModule::Write(char c){
+  ser->write(c);  
+  dbgf(F("WirelessModule::Write - c = %c"), c);
+}
+
 void WirelessModule::EnterProgrammingMode(){
   dbg(F("WirelessModule::EnterProgrammingMode"));
   delay(200);
-  
-  #ifndef DEBUG   // if DEBUG was not defined then Serial.begin was not called yet
-    Serial.begin(115200);
-  #endif
   
   while(true){
     while(ser->available()){

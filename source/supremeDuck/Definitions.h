@@ -1,7 +1,7 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-#define APP_VERSION "1.27"                            // It is used to compare it with the mobile app version.
+#define APP_VERSION "1.3"                            // It is used to compare it with the mobile app version.
                                                      // For example: 1.08 is compatible with 1.081 or 1.83148, 
                                                      // but it's not compatible with 1.09 or 1.091319 
                                                      // (in such case notification will be displayed in the app)
@@ -24,7 +24,7 @@
         Debugging 
 
 */
-//#define DEBUG
+//#define DEBUG                             //  Should be disabled if you're planning to exfiltrate data through serial
 //#define WAIT_FOR_SERIAL_MONITOR_TO_OPEN   //  Othewise the debug output during initialization is lost
 
 

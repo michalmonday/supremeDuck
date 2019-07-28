@@ -43,8 +43,6 @@
 char ssid[SSID_LEN] = "supremeDuck";
 char password[PASS_LEN] = "37373737";
 
-#define MAX_RESPONSE 500
-char response[MAX_RESPONSE] = {0};
 
 #define EEPROM_ADDRESS_AP_NAME_CHECK 0
 #define EEPROM_ADDRESS_AP_NAME 4
@@ -58,6 +56,13 @@ void Read_AP_EEPROM_Creds();
 ESP8266WebServer server(80);
 
 #define LED_PIN 2
+
+bool handshake_done = false;
+bool ok_received = false;
+
+#define ARDUINO_RESPONSE_TIMEOUT 5000
+
+String response;
 
 void setup() {  
   Serial.setTimeout(100); // Serial.readString function blocking time
@@ -122,12 +127,10 @@ void setup() {
     }
   });
 
-  server.on("/ducky_script_ready_check", [](){
-    if(Serial.available() == 2){
-      char buff[3] = {0};
-      buff[0] = Serial.read();
-      buff[1] = Serial.read();
-      server.send(200, "text/plain", buff);
+  server.on("/ducky_script_ready_check", [](){   
+    if(ok_received){
+      server.send(200, "text/plain", "OK");
+      ok_received = false;
     }else{
       server.send(200);
     }
@@ -144,19 +147,48 @@ void setup() {
 }
 
 void loop() {
+  
+  if(!handshake_done){
+    if(Serial.available() >= 8){ // if first letter is not ':' then don't read it, means that the main chip can't send anything that starts with ":" to the mobile app... (ugly but I feel that it has to be in one way or another)
+      String in_str = Serial.readString();
+      if(in_str.indexOf(":you_ok?") >= 0){
+        handshake_done = true;
+        Serial.print("im_ok");    
+        // 3 quick blinks (to let know that it communicated with the main chip well
+        digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50); digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50); digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50);   
+      }
+    }
+    return;
+  }
+  
   server.handleClient();
 
-  if(Serial.available() == 8 && Serial.peek() == ':'){ // if first letter is not ':' then don't read it, means that the main chip can't send anything that starts with ":" to the mobile app... (ugly but I feel that it has to be in one way or another)
-    String in_str = Serial.readString();
-    if(in_str.equals(":you_ok?")){
-      Serial.print("im_ok");    
-      // 3 quick blinks (to let know that it communicated with the main chip well
-      digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50); digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50); digitalWrite(LED_PIN, LOW); delay(50); digitalWrite(LED_PIN, HIGH); delay(50);   
+  if(Serial.available()){
+    String s = Serial.readString();
+    if(s.startsWith("OK") || s.endsWith("OK")){
+      ok_received = true; 
+      
+      if(s.startsWith("OK")){
+        s.remove(0,2);
+      }else{
+        s.remove(s.length()-3);
+      }
     }
+    response += s;
   }
 }
 
+bool IsSerialAvailableBeforeTimeout(unsigned long timeout){
+  unsigned long start_time = millis();
+  while(millis() - start_time < timeout){
+    if(Serial.available()){
+      return true;
+    }
+    delay(1);
+  }
 
+  return false;
+}
 
 void HandleData(){
   /*
@@ -177,29 +209,34 @@ void HandleData(){
     //Serial.print("400: Invalid Request");
     return;
   }
-
-  while(Serial.available() > 0){
-    char c = Serial.read(); // get rid of all unread data
-  }
   
   Serial.print(server.arg("data"));     // pass data from mobile app to arduino
+  ok_received = false;
   
-  int i = 0;  
-  memset(response, 0, MAX_RESPONSE);
-
   if(server.arg("data") == "VER" || server.arg("data") == "Request_info"){
-    delay(500);       // wait for response to send it back (but only for these to avoid delaying mouse movement for example)
-  }
-
-  while(Serial.available() > 0 && i < (MAX_RESPONSE-1)){
-    response[i++] = Serial.read();
-  }
-
-  if(i > 0){
-    server.send(200, "text/plain", response); 
-    //Serial.println("RECEIVED: " + String(response));
+    if(IsSerialAvailableBeforeTimeout(1000)){
+      server.send(200, "text/plain", Serial.readString().c_str());
+    }else{
+      server.send(200);
+    }   
+  }else if(server.hasArg("response") && server.arg("response") == "1"){
+    if(IsSerialAvailableBeforeTimeout(1000)){
+      String res = Serial.readString();
+      if(res.equals("OK")){
+        if(IsSerialAvailableBeforeTimeout(ARDUINO_RESPONSE_TIMEOUT)){
+          server.send(200, "text/plain", (res + response + Serial.readString()).c_str());
+        }else{
+          server.send(200, "text/plain", (res + response).c_str());
+        }
+      }else{
+        server.send(200, "text/plain", (res + response).c_str());
+      }  
+    }else{
+      server.send(200, "text/plain", response.c_str());
+    }
+    response = "";
   }else{
-    server.send(200);  
+    server.send(200);
   }
 }
 

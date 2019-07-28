@@ -1,9 +1,13 @@
 Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/master) for further updates. I'm trying to keep commit messages/titles to be descriptive.   
+**28/07/2019**  
+-refactored Arduino code  
+-added serial exfiltration ducky script  
+
 **17/02/2019**   
--Added BLE support (modules like JDY-08 can be used)  
+-added BLE support (modules like JDY-08 can be used)  
 
 **02/02/2019**  
--Files exfiltration using [Dropbox](https://www.youtube.com/watch?v=TBBT1c2zjms) and Gmail  
+-files exfiltration using [Dropbox](https://www.youtube.com/watch?v=TBBT1c2zjms) and Gmail  
 -fixed minor bug ("Text input is empty" message after running ducky script)  
 
 **26/01/2019**  
@@ -18,10 +22,10 @@ Please check the [commits](https://github.com/michalmonday/supremeDuck/commits/m
 -added preview feature for "Youtube", "Website" and "Set wallpaper" categories  
 
 **16/01/2019 - 13:07**  
-Fixed what I messed up with last update... (ducky script not working properly)  
+-fixed what I messed up with last update... (ducky script not working properly)  
 
 **16/01/2019**  
-Fixed ducky script bug (e.g. "ALT TAB" not doing what it supposed to)  
+-fixed ducky script bug (e.g. "ALT TAB" not doing what it supposed to)  
   
 **24/07/2018**  
 -increased baud rate of Esp8266 version to 115200 (it's necessary to upload both: Esp8266 and Arduino code for the change to take place)  
