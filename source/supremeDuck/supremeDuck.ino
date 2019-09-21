@@ -69,11 +69,7 @@ void setup()                                    // setup function is a part of e
 }
 
 void loop()                                   // loop function is also a part of every Arduino sketch but gets called over again after it returns/finishes unlike "setup" function
-{ 
-  if(IsItTimeTo_TurnOffLed()){
-    digitalWrite(LED_BUILTIN, LOW);
-  }
-  
+{   
   char serial_input[MAX_SERIAL_LENGTH] = {0};           /* it will contain the text sent from bluetooth module and received in arduino. "= {0}" works like: 
                                                            memset(serial_input, 0, MAX_SERIAL_LENGTH); */
                                                            
@@ -90,8 +86,7 @@ void loop()                                   // loop function is also a part of
     
     Protocol::Check(serial_input);
     wireless_module->Send("OK");                       /* it wasn't necessary before, but the ducky script functionality requires the Arduino to say: 
-                                                          "OK, I already typed the last line/key you've sent me, so you can send the next one", 
-                                                          otherwise there would have to be a bigger delay */
+                                                          "OK, I already typed the last line/key you've sent me, so you can send the next one"  */
   }
 
   if(Serial.available()){
@@ -103,12 +98,16 @@ void loop()                                   // loop function is also a part of
   }
 
 
+  if(IsItTimeTo_TurnOffLed()){                          // from Funcs.h
+    digitalWrite(LED_BUILTIN, LOW);
+  }
+
   if(Keyboard.IsItTimeTo_ReleaseAltTab()){ 
     Keyboard.ReleaseAltTab();
   }
 }
 
-void MouseMove(char *str) // str = MM:L,U,FF,FF,end   // MM = mouse move, L = left, U = up, FF = horizontal speed, FF = vertical speed
+void MouseMove(char *str)           // str = MM:L,U,FF,FF,end   // MM = mouse move, L = left, U = up, FF = horizontal speed, FF = vertical speed
 { 
   char x, y;
   str[12] = '\0';
