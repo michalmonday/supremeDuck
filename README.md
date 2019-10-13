@@ -83,6 +83,7 @@ According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/ev
 ## Similar projects  
 [Offensive MG Cables (O.MG)](http://mg.lol/blog/omg-cable/) - the smallest of all publicly available wireless HID devices (based on [espusb](https://github.com/cnlohr/espusb)), resembles NSA tools with its' compactness.  
 [wifi_ducky](https://github.com/spacehuhn/wifi_ducky) - very similar project to this but using browser instead of application.  
+[WiFiDuck](https://github.com/spacehuhn/WiFiDuck) - the improved successor of wifi_ducky  
 [Modified wifi_ducky versions](https://github.com/spacehuhn/wifi_ducky/pull/94) - 4 different implementations.  
 [ESPloitV2](https://github.com/exploitagency/ESPloitV2) - similar to wifi_ducky but has built-in exfiltration/phishing methods (browser based).  
 [WiDucky](https://github.com/basic4/WiDucky) - similar to wifi_ducky but has various ways of controlling it (Python, Windows program, Android app).  
