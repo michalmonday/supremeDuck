@@ -23,7 +23,7 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 * Preview feature, it allows to see what youtube video, wallpaper or website will be launched on the target PC.  
 ![Preview-feature-gif](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/preview_option_for_youtube_and_websites.gif)  
 * Option to use [alt+numpad](https://github.com/michalmonday/supremeDuck/wiki/MultiLang-method) combinations on Windows (to type correct characters regardless of system language)  
-* Language switching to match the language setting on target machine without the need to reprogram the device. Supported settings are:  
+* Language switching to match the language setting on target machine without the need to reprogram the device. Supported settings are:   
 
 |||||||
 |:-:|:-:|:-:|:-:|:-:|:-:|
