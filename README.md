@@ -1,7 +1,7 @@
 ![title-image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/github_banner.png)  
 
 ## What is it?  
-It's a device that can be connected to a PC and pretend to be keyboard and mouse. The user can trigger specific actions using smartphone through wifi or bluetooth.  
+It's a device that can be connected to a PC and pretend to be keyboard and mouse, allowing the user to trigger specific actions using smartphone through wifi or bluetooth.  
 
 
 ## What can you do with it?  
@@ -28,15 +28,17 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 |||||||
 |:-:|:-:|:-:|:-:|:-:|:-:|
 | Belgian | Brazilian | Canadian | Switzerland | Czech | German |
-| Dannish | Spannish | Finnish | French | UK | Croatian |
+| Danish | Spanish | Finnish | French | UK | Croatian |
 | Italian | Norwegian | Portuguese | Slovenian | El Salvador | US |
 > You can see how reliable are some of these settings [here](https://github.com/michalmonday/supremeDuck/wiki/Encoding-effectiveness)  
 * "Live text execution" checkbox  
 <img src="https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/live_text.png" height="100">  
 
 ## Video  
-[Review and presentation video](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2) thanks to:  
-[![image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/JackkTutorials.png)](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)
+[Review and presentation video](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2) thanks to:   
+[![image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/JackkTutorials.png)](https://www.youtube.com/watch?v=FsTeedpYeg4&index=7&list=PLnVVAaZSdNGtcMunS1_Wy3smTZLlzIaV2)  
+
+Edit: Unfortunately Jacks youtube channel got closed (because it had educational hacking videos).   
 
 
 ## Is it going to work on any PC and work instantly?  
@@ -63,11 +65,13 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 - [Device types comparison](https://github.com/michalmonday/supremeDuck/wiki/Device-types-comparison) (advantages and disadvantages of using Wifi/BLE/Bluetooth versions)  
 - [OS specific functionality details](https://github.com/michalmonday/supremeDuck/wiki/OS-specific-functionality)  
 - [List of updates](https://github.com/michalmonday/supremeDuck/blob/master/UPDATES.md)  
-- :moneybag:[Devices for sale](http://prankingdevice.co.uk):moneybag:  
+- :moneybag:[Devices for sale](https://www.tindie.com/stores/michalmonday/):moneybag:  
 
 
 ## Future  
-According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/evan/2018/09/mit.html) it will be possible to run application made using App Inventor on iOS soon (first quarter of 2019) which means that the supremeDuck application will not be limited to Android only. The progress of their work can be checked at: http://doesappinventorrunonios.com/  
+According to [MIT App Inventor Team](http://appinventor.mit.edu/explore/blogs/evan/2018/09/mit.html) it will be possible to run application made using App Inventor on iOS soon which means that the supremeDuck application will not be limited to Android only.  
+
+As of March 2021, it seems that MIT App Inventor application is available for iOS (as mentioned in [this article](https://appinventor.mit.edu/blogs/evan/2021/03/04-mit-app-inventor-ios-app-store)), however there is no way to compile apps for iOS yet. As mentioned [in this post](https://community.appinventor.mit.edu/t/how-to-make-ios-apps-using-mit-app-inventor/28838), it will be possible when MIT finishes testng the iOS compiler.  
 
 
 ## Credits / thanks to / kudos  
