@@ -10,7 +10,7 @@ Plug it in to your friend's PC and by pressing a button on your smartphone:
 * :tv: play a youtube video  
 * :capital_abcd: type pre-defined text of your choice  
 * :open_file_folder: download and execute file  
-* :squirrel: [exfiltrate files](https://www.youtube.com/watch?v=TBBT1c2zjms) to Dropbox and Gmail  
+* :shipit: [exfiltrate files](https://www.youtube.com/watch?v=TBBT1c2zjms) to Dropbox and Gmail  
 * :diamond_shape_with_a_dot_inside: move mouse cursor  
 * :duck: run ducky script  
 * and [much more](https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Payloads)  
@@ -51,6 +51,8 @@ The smartphone application was made using "MIT App Inventor 2" and is [open sour
 
 ## Resources  
 - [Application](https://play.google.com/store/apps/details?id=appinventor.ai_michalmonday17.supremeDuck)  
+    :warning: As of 08/02/2025, the application is not available on Google Play Store because I failed to verify identity. I'm trying to fix it for the last few months (I uploaded valid documents, sent many emails but dealing with Google Play support is the most dystopian experience I ever had). Not sure if the app will be back on Google Play Store again but the apk is available in the [mobile app](https://github.com/michalmonday/supremeDuck/tree/master/source/mobile%20app) folder (together with the "aia" source file for the App Inventor).
+
 [![google store image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/google_play.png)](https://play.google.com/store/apps/details?id=appinventor.ai_michalmonday17.supremeDuck)  
 - [DIY guide - bluetooth version](https://github.com/michalmonday/supremeDuck/wiki/DIY-Tutorial)  
 ![bluetooth version image](https://raw.githubusercontent.com/michalmonday/files/master/supremeDuck/resources/repository%20stuff/readme_images/bluetooth_small_img.png)  
