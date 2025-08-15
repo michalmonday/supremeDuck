@@ -12,7 +12,7 @@
 
 */
 // comment-out all to use standard bluetooth version (HC-06)                                                         
-//#define WIFI_DUCKY_SETUP                             // uncomment if you're using "Esp8266" (e.g. the same hardware/wiring as wifi_ducky)
+#define WIFI_DUCKY_SETUP                             // uncomment if you're using "Esp8266" (e.g. the same hardware/wiring as wifi_ducky)
 //#define JDY_10_SETUP                                 // uncomment if using JDY-10 (BLE module), AT commands are followed by "carriage return" (\r) and "newline" (\n) bytes unlike JDY-08
 //#define JDY_08_SETUP                                 // uncomment if you're using JDY-08 (BLE module) based version
                                                        // JDY_08_SETUP and JDY_10_SETUP use "AT+PASS" and 6 digits for setting pin (instead of "AT+PIN" and 4 digits like HC-06)
@@ -54,6 +54,10 @@ For BLE and Bluetooth versions it allows sending AT commands using "Tools -> Ser
 
 #define WIFI_DUCKY_GPIO_0_CONTROL_PIN 2           // 2 of Arduino Pro Micro, SDA, PD1 (19 of Atmega32u4)
 #define WIFI_DUCKY_ENABLE_CONTROL_PIN 20          // 20 of Arduino Pro Micro, A2, PF5 (38 of Atmega32u4)
+
+// CJMCU3212 setup
+//#define WIFI_DUCKY_GPIO_0_CONTROL_PIN 14           // 14 of Arduino Pro Micro, MISO, PB3 (11 of Atmega32u4)
+//#define WIFI_DUCKY_ENABLE_CONTROL_PIN 16          // 16 of Arduino Pro Micro, MOSI, PB2 (10 of Atmega32u4)
 
 #if defined (WIFI_DUCKY_SETUP) || defined (JDY_08_SETUP) || defined (JDY_10_SETUP)
   #define USE_TX_RX_PINS                                //  TX/RX pins of pro micro (hardware serial) instead of 9/8 pins and software serial library 
